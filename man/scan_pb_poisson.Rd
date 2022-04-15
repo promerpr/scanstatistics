@@ -4,8 +4,14 @@
 \alias{scan_pb_poisson}
 \title{Calculate the population-based Poisson scan statistic.}
 \usage{
-scan_pb_poisson(counts, zones, population = NULL, n_mcsim = 0,
-  gumbel = FALSE, max_only = FALSE)
+scan_pb_poisson(
+  counts,
+  zones,
+  population = NULL,
+  n_mcsim = 0,
+  gumbel = FALSE,
+  max_only = FALSE
+)
 }
 \arguments{
 \item{counts}{Either:

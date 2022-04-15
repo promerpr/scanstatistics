@@ -4,8 +4,14 @@
 \alias{scan_pb_perm_cpp}
 \title{Calculate the space-time permutation scan statistic.}
 \usage{
-scan_pb_perm_cpp(counts, baselines, zones, zone_lengths, store_everything,
-  num_mcsim)
+scan_pb_perm_cpp(
+  counts,
+  baselines,
+  zones,
+  zone_lengths,
+  store_everything,
+  num_mcsim
+)
 }
 \arguments{
 \item{counts}{An integer matrix (most recent timepoint in first row).}

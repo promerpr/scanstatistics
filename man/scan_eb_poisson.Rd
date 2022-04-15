@@ -4,8 +4,15 @@
 \alias{scan_eb_poisson}
 \title{Calculate the expectation-based Poisson scan statistic.}
 \usage{
-scan_eb_poisson(counts, zones, baselines = NULL, population = NULL,
-  n_mcsim = 0, gumbel = FALSE, max_only = FALSE)
+scan_eb_poisson(
+  counts,
+  zones,
+  baselines = NULL,
+  population = NULL,
+  n_mcsim = 0,
+  gumbel = FALSE,
+  max_only = FALSE
+)
 }
 \arguments{
 \item{counts}{Either:

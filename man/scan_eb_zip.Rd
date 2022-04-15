@@ -4,9 +4,17 @@
 \alias{scan_eb_zip}
 \title{Calculate the expectation-based ZIP scan statistic.}
 \usage{
-scan_eb_zip(counts, zones, baselines = NULL, probs = NULL,
-  population = NULL, n_mcsim = 0, gumbel = FALSE, max_only = FALSE,
-  rel_tol = 0.001)
+scan_eb_zip(
+  counts,
+  zones,
+  baselines = NULL,
+  probs = NULL,
+  population = NULL,
+  n_mcsim = 0,
+  gumbel = FALSE,
+  max_only = FALSE,
+  rel_tol = 0.001
+)
 }
 \arguments{
 \item{counts}{Either:

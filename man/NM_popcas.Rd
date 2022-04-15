@@ -4,14 +4,16 @@
 \name{NM_popcas}
 \alias{NM_popcas}
 \title{Population and brain cancer cases in New Mexico counties during 1973--1991.}
-\format{A data frame with 608 rows and 4 variables:
+\format{
+A data frame with 608 rows and 4 variables:
 \describe{
   \item{year}{Integer; the year the cases were recorded.}
   \item{county}{Character; the name of the county (no spaces).}
   \item{population}{Integer; the population in that county and year.}
   \item{count}{Integer; the number of brain cancer cases in that county and 
                year.}
-}}
+}
+}
 \usage{
 NM_popcas
 }

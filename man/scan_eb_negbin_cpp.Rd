@@ -4,8 +4,16 @@
 \alias{scan_eb_negbin_cpp}
 \title{Calculate the expectation-based negative binomial scan statistic.}
 \usage{
-scan_eb_negbin_cpp(counts, baselines, overdisp, zones, zone_lengths,
-  store_everything, num_mcsim, score_hotspot)
+scan_eb_negbin_cpp(
+  counts,
+  baselines,
+  overdisp,
+  zones,
+  zone_lengths,
+  store_everything,
+  num_mcsim,
+  score_hotspot
+)
 }
 \arguments{
 \item{counts}{Integer matrix (most recent timepoint in first row)}

@@ -4,8 +4,7 @@
 \alias{estimate_zip_params}
 \title{Estimate the parameters of a ZIP distribution.}
 \usage{
-estimate_zip_params(counts, population = NULL, min_p = 0.001,
-  min_mu = 0.3)
+estimate_zip_params(counts, population = NULL, min_p = 0.001, min_mu = 0.3)
 }
 \arguments{
 \item{counts}{A matrix or vector of observed counts. Rows indicate time 

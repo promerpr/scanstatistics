@@ -4,7 +4,8 @@
 \name{NM_geo}
 \alias{NM_geo}
 \title{Longitude and latitude of New Mexico county seats.}
-\format{A data frame with 33 rows and 7 variables:
+\format{
+A data frame with 33 rows and 7 variables:
 \describe{
   \item{county}{Factor; the counties of New Mexico (no spaces).}
   \item{seat}{Character; the name of the county seat, i.e. the administrative 
@@ -16,7 +17,8 @@
                      the county.}
   \item{center_lat}{Numeric; the latitude of the geographical center of the 
                     county.}
-}}
+}
+}
 \source{
 \url{https://en.wikipedia.org/wiki/List_of_counties_in_New_Mexico}
 }

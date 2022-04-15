@@ -4,7 +4,8 @@
 \name{NM_map}
 \alias{NM_map}
 \title{Data to plot the counties of New Mexico.}
-\format{A data frame with 867 rows and 7 variables:
+\format{
+A data frame with 867 rows and 7 variables:
 \describe{
   \item{long}{Numeric; longitude of county polygon corner.}
   \item{lat}{Numeric; latitude of county polygon corner.}
@@ -13,7 +14,8 @@
   \item{region}{Character; region is "new mexico" for all rows.}
   \item{subregion}{Character; the county name (with spaces).}
   \item{county}{Factor; the county name (no spaces).}
-}}
+}
+}
 \usage{
 NM_map
 }

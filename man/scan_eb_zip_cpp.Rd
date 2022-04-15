@@ -4,8 +4,16 @@
 \alias{scan_eb_zip_cpp}
 \title{Calculate the highest-value EB ZIP loglihood ratio statistic.}
 \usage{
-scan_eb_zip_cpp(counts, baselines, probs, zones, zone_lengths, rel_tol,
-  store_everything, num_mcsim)
+scan_eb_zip_cpp(
+  counts,
+  baselines,
+  probs,
+  zones,
+  zone_lengths,
+  rel_tol,
+  store_everything,
+  num_mcsim
+)
 }
 \arguments{
 \item{counts}{matrix (most recent timepoint in first row)}

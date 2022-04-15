@@ -3,7 +3,6 @@
 \docType{package}
 \name{scanstatistics}
 \alias{scanstatistics}
-\alias{scanstatistics-package}
 \title{scanstatistics: Space-time anomaly detection using scan statistics.}
 \description{
 The scanstatistics package provides two categories of important functions:

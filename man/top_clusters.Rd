@@ -4,8 +4,15 @@
 \alias{top_clusters}
 \title{Get the top (non-overlappig) clusters.}
 \usage{
-top_clusters(x, zones, k = 5, overlapping = FALSE, gumbel = FALSE,
-  alpha = NULL, ...)
+top_clusters(
+  x,
+  zones,
+  k = 5,
+  overlapping = FALSE,
+  gumbel = FALSE,
+  alpha = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class scanstatistics.}

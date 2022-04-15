@@ -4,8 +4,12 @@
 \alias{estimate_variances}
 \title{Estimate variances based on observed counts.}
 \usage{
-estimate_variances(counts, baselines = NULL, population = NULL,
-  constant_dim = 1)
+estimate_variances(
+  counts,
+  baselines = NULL,
+  population = NULL,
+  constant_dim = 1
+)
 }
 \arguments{
 \item{counts}{A matrix of observed counts. Rows indicate time (ordered from 

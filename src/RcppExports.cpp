@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // scan_bayes_negbin_cpp
 Rcpp::List scan_bayes_negbin_cpp(const arma::umat& counts, const arma::mat& baselines, const arma::uvec& zones, const arma::uvec& zone_lengths, const double outbreak_prob, const double alpha_null, const double beta_null, const double alpha_alt, const double beta_alt, const arma::vec& inc_values, const arma::vec& inc_probs);
 RcppExport SEXP _scanstatistics_scan_bayes_negbin_cpp(SEXP countsSEXP, SEXP baselinesSEXP, SEXP zonesSEXP, SEXP zone_lengthsSEXP, SEXP outbreak_probSEXP, SEXP alpha_nullSEXP, SEXP beta_nullSEXP, SEXP alpha_altSEXP, SEXP beta_altSEXP, SEXP inc_valuesSEXP, SEXP inc_probsSEXP) {

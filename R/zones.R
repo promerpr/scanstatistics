@@ -60,7 +60,7 @@ coords_to_knn <- function(x,
 #' d <- dist(x, diag = TRUE, upper = TRUE)
 #' dist_to_knn(d, k = 3)
 dist_to_knn <- function(x, k = min(10, nrow(x))) {
-  if (class(x) == "dist" && (!attr(x, "Diag") || !attr(x, "Upper"))) {
+  if ("dist" %in% class(x) && (!attr(x, "Diag") || !attr(x, "Upper"))) {
     stop("If x is a 'dist' object, it must have diag=TRUE and upper=TRUE")
   }
   t(apply(as.matrix(x), 2, order))[, seq(k)]

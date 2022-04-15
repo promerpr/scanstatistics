@@ -236,7 +236,7 @@ top_clusters <- function(x, zones, k = 5, overlapping = FALSE, gumbel = FALSE,
                                            x$replicates$score)$pvalue
       }
       if (!is.null(alpha) && alpha >= 0 && alpha <= 1) {
-        res$critical_value <- quantile(x$replicates$score, 1 - alpha)
+        res$critical_value <- stats::quantile(x$replicates$score, 1 - alpha)
       }
     }
     return(res)

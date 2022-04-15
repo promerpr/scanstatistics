@@ -4,8 +4,14 @@
 \alias{scan_permutation}
 \title{Calculate the space-time permutation scan statistic.}
 \usage{
-scan_permutation(counts, zones, population = NULL, n_mcsim = 0,
-  gumbel = FALSE, max_only = FALSE)
+scan_permutation(
+  counts,
+  zones,
+  population = NULL,
+  n_mcsim = 0,
+  gumbel = FALSE,
+  max_only = FALSE
+)
 }
 \arguments{
 \item{counts}{Either:
