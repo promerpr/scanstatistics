@@ -7,9 +7,10 @@ Description: Detection of anomalous space-time clusters using the scan
     possible by Monte Carlo simulation.
 Version: 1.0.2
 Date: 2018-04-04
-Authors@R: person("Benjamin", "Allévius", email = "benjak@math.su.se",
-  role = c("aut", "cre"))
-Maintainer: Benjamin Allévius <benjak@math.su.se>
+Authors@R: c(
+  person("Benjamin", "Allévius", email = "benjak@math.su.se", role = "aut"),
+  person("Paul", "Romer Present", email = "paul.romerpresent@fastmail.fm", role = c("ctb", "cre"))
+  )
 Encoding: UTF-8
 License: GPL (>= 3)
 URL: https://github.com/BenjaK/scanstatistics
@@ -24,7 +25,6 @@ Imports:
     plyr,
     purrr,
     Rcpp,
-    reliaR,
     stats,
     sets,
     tibble,
@@ -45,3 +45,4 @@ RoxygenNote: 7.1.2
 ByteCompile: true
 SystemRequirements: C++11
 LinkingTo: Rcpp, RcppArmadillo
+LazyData: true

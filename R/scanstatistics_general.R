@@ -20,7 +20,7 @@
 #' @param replicates A vector of Monte Carlo replicates of the scan statistic.
 #' @return The \eqn{p}-value or \eqn{p}-values corresponding to the observed 
 #'    scan statistic(s).
-#' @keywords internal
+#' @export
 mc_pvalue <- function(observed, replicates) {
   if (length(replicates) == 0) {
     return(NULL)
@@ -57,8 +57,7 @@ mc_pvalue <- function(observed, replicates) {
 #' @return The \eqn{p}-value or \eqn{p}-values corresponding to the observed 
 #'    scan statistic(s).
 #' @importFrom ismev gum.fit
-#' @importFrom reliaR pgumbel
-#' @keywords internal
+#' @export
 gumbel_pvalue <- function(observed, replicates, method = "ML", ...) {
   if (length(replicates) < 2) {
     stop("Need at least 2 observations to fit Gumbel distribution.")
