@@ -2,14 +2,10 @@
 title: "Process data"
 author: "Benjamin Allévius"
 date: "`r Sys.Date()`"
-output: 
-  markdowntemplates::skeleton:
-    fig_caption: yes
-    fig_width: 7
-    fig_height: 5
-    toc: true
-    toc_depth: 3
+output: html_document
 bibliography: ../references.bib
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Process the brain cancer data
@@ -164,17 +160,17 @@ clean_entry <- function(x) {
     # gsub("\ km²\\)", "", .)
 }
 
-# Grab the table from Wikipedia (as at 2017-08-01)
+# Grab the table from Wikipedia (as at 2022-04-15)
 seat_url <- "https://en.wikipedia.org/wiki/List_of_counties_in_New_Mexico"
 NM_geo <- seat_url %>%
   read_html %>%
   rvest::html_nodes(xpath = '//*[@id="mw-content-text"]/div/table[3]') %>%
   html_table %>%
   .[[1]] %>%
-  select(County, `County seat[3]`, `Population[6]`, `Area[3][7]`) %>%
+  select(County, `County seat[3]`, `Pop.[6]`, `Area[3][7]`) %>%
   rename(county = County, 
          seat = `County seat[3]`, 
-         population = `Population[6]`, 
+         population = `Pop.[6]`, 
          `area(km2)` = `Area[3][7]`) %>%
   mutate_at(.vars = c("population", "area(km2)"), .funs = clean_entry) %>%
   mutate(county = gsub(" County", "", county)) %>%

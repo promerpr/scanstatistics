@@ -6,7 +6,7 @@ Description: Detection of anomalous space-time clusters using the scan
     scanning for clusters with ongoing anomalies. Hypothesis testing is made 
     possible by Monte Carlo simulation.
 Version: 1.0.2
-Date: 2018-04-04
+Date: 2022-04-19
 Authors@R: c(
   person("Benjamin", "Allévius", email = "benjak@math.su.se", role = "aut"),
   person("Paul", "Romer Present", email = "paul.romerpresent@fastmail.fm", role = c("ctb", "cre"))
@@ -18,18 +18,16 @@ BugReports: https://github.com/BenjaK/scanstatistics/issues
 Depends: R (>= 3.4)
 Imports:
     dplyr,
-    emdbook,
     ismev,
     magrittr,
-    methods,
     plyr,
-    purrr,
     Rcpp,
     stats,
     sets,
     tibble,
     tidyr
 Suggests:
+    purrr,
     doParallel,
     foreach,
     ggplot2,
