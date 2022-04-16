@@ -18,3 +18,5 @@ NOTES.txt
 JOSS/*
 LICENSE.md
 ^\.github$
+^_pkgdown\.yml$
+^pkgdown$
