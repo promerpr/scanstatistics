@@ -17,3 +17,4 @@ NOTES.txt
 ^docs$
 JOSS/*
 LICENSE.md
+^\.github$

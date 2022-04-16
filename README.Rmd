@@ -15,10 +15,12 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(fig.width=10, fig.height=6, fig.path="inst/image/")
 ```
 
-[![Build Status](https://travis-ci.org/BenjaK/scanstatistics.svg?branch=master)](https://travis-ci.org/BenjaK/scanstatistics)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/promerpr/scanstatistics/workflows/R-CMD-check/badge.svg)](https://github.com/promerpr/scanstatistics/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/scanstatistics)](https://cran.r-project.org/package=scanstatistics)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/scanstatistics)](http://cran.rstudio.com/web/packages/scanstatistics/index.html)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00515/status.svg)](https://doi.org/10.21105/joss.00515)
+<!-- badges: end -->
 
 # scanstatistics
 An R package for space-time anomaly detection using scan statistics.
@@ -31,7 +33,7 @@ install.packages("scanstatistics")
 
 To install the development version of this package, type this instead:
 ```{r install_github, eval=FALSE}
-devtools::install_github("benjak/scanstatistics", ref = "develop")
+devtools::install_github("promerpr/scanstatistics", ref = "develop")
 ```
 
 ## What are scan statistics?
@@ -318,12 +320,11 @@ statistic.
 
 # Feedback
 If you think this package lacks some functionality, or that something needs 
-better documentation, I happily accept feedback either here at GitHub or via 
-email at benjak@math.su.se. I'm also very interested in applying the methods in 
-this package (current and future) to new problems, so if you know of any 
-suitable public datasets, please tell me! A dataset with a multivariate 
-response (e.g. multiple counter variables) would be of particular interest for 
-some of the scan statistics that will appear in future versions of the package.
+better documentation, please open an issue here. I'm also very interested in 
+applying the methods in  this package (current and future) to new problems, 
+so if you know of any suitable public datasets, please tell me! A dataset 
+with a multivariate response (e.g. multiple counter variables) would be of 
+particular interest. 
 
 # References
 
