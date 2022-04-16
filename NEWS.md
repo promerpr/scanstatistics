@@ -1,3 +1,12 @@
+# scanstatistics 1.1.0
+
+## Minor changes
+
+* Switched maintainer and associated urls.
+* Fixes to compiler warnings; needed to restore package to CRAN.
+* Removed dependence on reliaR (package was no longer on CRAN)
+* Fixed bug in `scan_eb_negbin`
+
 # scanstatistics 1.0.2
 
 ## Minor changes
