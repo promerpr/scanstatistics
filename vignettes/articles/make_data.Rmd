@@ -32,6 +32,9 @@ data frames:
   package is not in the needed format, we will grab the coordinates from
   [this Wikipedia article](https://en.wikipedia.org/wiki/List_of_counties_in_New_Mexico) 
   instead, and replace this data frame.
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
 
 ```{r load_popcas_data, cache=FALSE}
 library(rsatscan)
@@ -134,15 +137,15 @@ NM_pop %<>% mutate(year = year + 1900) %>% as.data.table
 
 Scan statistics aim to find _localized_ anomalies in the data, meaning that the 
 locations and timepoints involved in the anomaly are close together in some way.
-In this example, we will measure the spatial similarity using the spherical 
-distance between the county seats. In other circumstances, we might use the
-geographic centroids (calculated above), or another distance measure.
+In this example, we will use the
+geographic centroids (calculated above), but lots of other distance measures could
+work just as well. 
 So let's grab the coordinates of the county seats from Wikipedia and plot them.
 Kudos to Cory Nissen for 
 [this blogpost](http://blog.corynissen.com/2015/01/using-rvest-to-scrape-html-table.html), 
 which shows how to fetch data from a table on Wikipedia.
 
-```{r grab_seat_coords, cache=FALSE}
+```{r grab_seat_coords, cache=FALSE, eval=FALSE}
 library(rvest)
 
 # Function to clean table entries
@@ -189,6 +192,19 @@ get_NM_longlat <- function(seats) {
 NM_geo <- cbind(NM_geo, get_NM_longlat(NM_geo$seat))
 NM_geo <- merge(NM_geo, centroids, by = "county")
 
+ggplot() + 
+  geom_polygon(data = NM_map,
+               mapping = aes(x = long, y = lat, group = group),
+               color = "white", fill = "grey") +
+  geom_point(data = NM_geo, 
+             mapping = aes(x = seat_long, y = seat_lat)) +
+  ggtitle("County seats of New Mexico") +
+  theme_bw()
+```
+
+
+```{r, echo=FALSE}
+data(NM_geo, package = "scanstatistics")
 ggplot() + 
   geom_polygon(data = NM_map,
                mapping = aes(x = long, y = lat, group = group),
