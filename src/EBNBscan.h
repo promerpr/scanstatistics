@@ -93,7 +93,12 @@ inline void EBNBscan::calculate(const arma::uword storage_index,
 
 inline double EBNBscan::score_hotspot(const arma::uvec& y, const arma::vec& mu,
                                       const arma::vec& omega, const arma::uword d) {
-  return arma::accu((y - mu) / omega) / arma::accu(mu / omega);
+  
+  double denom = arma::accu(mu / omega);
+  double denom2 = std::sqrt( (double) denom);
+  double numer = arma::accu((y - mu) / omega);
+  return numer/denom2;
+  // return arma::accu((y - mu) / omega) / arma::sqrt( arma::accu(mu / omega) );
 }
 
 inline double EBNBscan::score_emerge(const arma::uvec& y, const arma::vec& mu,

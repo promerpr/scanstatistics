@@ -3,7 +3,7 @@ context("EB negbin statistic tests")
 # Helper functions -----------------------------------------------------------
 sc_hot <- function(y, m, w) {
   num <- sum((y - m) / w)
-  den <- sum(m / w)
+  den <- sqrt(sum(m / w))
   return(num / den)
 }
 
