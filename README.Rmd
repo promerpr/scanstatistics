@@ -33,7 +33,7 @@ install.packages("scanstatistics")
 
 To install the development version of this package, type this instead:
 ```{r install_github, eval=FALSE}
-devtools::install_github("promerpr/scanstatistics", ref = "develop")
+devtools::install_github("promerpr/scanstatistics")
 ```
 
 ## What are scan statistics?
@@ -320,11 +320,7 @@ statistic.
 
 # Feedback
 If you think this package lacks some functionality, or that something needs 
-better documentation, please open an issue here. I'm also very interested in 
-applying the methods in  this package (current and future) to new problems, 
-so if you know of any suitable public datasets, please tell me! A dataset 
-with a multivariate response (e.g. multiple counter variables) would be of 
-particular interest. 
+better documentation, please open an issue here. 
 
 # References
 

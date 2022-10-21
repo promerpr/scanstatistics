@@ -18,7 +18,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/promerpr/scanstatistics/workflows/R-CMD-check/badge.svg)](https://github.com/promerpr/scanstatistics/actions)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/scanstatistics)](https://cran.r-project.org/package=scanstatistics)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/scanstatistics)](https://cran.r-project.org/package=scanstatistics)
 [![CRAN
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/scanstatistics)](http://cran.rstudio.com/web/packages/scanstatistics/index.html)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00515/status.svg)](https://doi.org/10.21105/joss.00515)
@@ -40,7 +40,7 @@ install.packages("scanstatistics")
 To install the development version of this package, type this instead:
 
 ``` r
-devtools::install_github("promerpr/scanstatistics", ref = "develop")
+devtools::install_github("promerpr/scanstatistics")
 ```
 
 ## What are scan statistics?
@@ -121,9 +121,6 @@ the *scanstatistics* package:
 ``` r
 library(scanstatistics)
 library(ggplot2)
-#> Registered S3 method overwritten by 'ggplot2':
-#>   method        from
-#>   print.element sets
 
 # Load map data
 data(NM_map)
@@ -165,7 +162,7 @@ It should be noted that Cibola county was split from Valencia county in
 The Poisson distribution is a natural first option when dealing with
 count data. The *scanstatistics* package provides the two functions
 `scan_eb_poisson` and `scan_pb_poisson` with this distributional
-assumption. The first is an expectation-based[1] scan statistic for
+assumption. The first is an expectation-based[^1] scan statistic for
 univariate Poisson-distributed data proposed by Neill et al. (2005), and
 we focus on this one in the example below. The second scan statistic is
 the population-based scan statistic proposed by Kulldorff (2001).
@@ -196,6 +193,10 @@ library(dplyr)
 counts <- NM_popcas %>% 
   filter(year >= 1986 & year < 1990) %>%
   df_to_matrix(time_col = "year", location_col = "county", value_col = "count")
+#> Warning: `spread_()` was deprecated in tidyr 1.2.0.
+#> Please use `spread()` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 ```
 
 #### Spatial zones
@@ -375,11 +376,7 @@ for each scan statistic.
 # Feedback
 
 If you think this package lacks some functionality, or that something
-needs better documentation, please open an issue here. I’m also very
-interested in applying the methods in this package (current and future)
-to new problems, so if you know of any suitable public datasets, please
-tell me! A dataset with a multivariate response (e.g. multiple counter
-variables) would be of particular interest.
+needs better documentation, please open an issue here.
 
 # References
 
@@ -415,9 +412,9 @@ Proceedings of the 2005 Conference.
 Tango, T., Takahashi, K. Kohriyama, K. (2011), *A Space-Time Scan
 Statistic for Detecting Emerging Outbreaks*, Biometrics 67 (1), 106–15.
 
-[1] Expectation-based scan statistics use past non-anomalous data to
-estimate distribution parameters, and then compares observed cluster
-counts from the time period of interest to these estimates. In contrast,
-*population-based* scan statistics compare counts in a cluster to those
-outside, only using data from the period of interest, and does so
-conditional on the observed total count.
+[^1]: Expectation-based scan statistics use past non-anomalous data to
+    estimate distribution parameters, and then compares observed cluster
+    counts from the time period of interest to these estimates. In
+    contrast, *population-based* scan statistics compare counts in a
+    cluster to those outside, only using data from the period of
+    interest, and does so conditional on the observed total count.
