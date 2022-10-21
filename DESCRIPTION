@@ -6,7 +6,7 @@ Description: Detection of anomalous space-time clusters using the scan
     scanning for clusters with ongoing anomalies. Hypothesis testing is made 
     possible by Monte Carlo simulation.
 Version: 1.1.0
-Date: 2022-04-19
+Date: 2022-08-21
 Authors@R: c(
   person("Benjamin", "Allévius", email = "benjak@math.su.se", role = "aut"),
   person("Paul", "Romer Present", email = "paul.romerpresent@fastmail.fm", role = c("ctb", "cre"))
@@ -39,7 +39,7 @@ Suggests:
     sp,
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 ByteCompile: true
 SystemRequirements: C++11
 LinkingTo: Rcpp, RcppArmadillo
