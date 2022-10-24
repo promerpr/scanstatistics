@@ -12,11 +12,23 @@
 
 <meta name="author" content="Benjamin Allévius" />
 
-<meta name="date" content="2022-04-15" />
+<meta name="date" content="2022-10-24" />
 
 <title>Introduction to scanstatistics</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -26,6 +38,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -109,13 +122,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -149,7 +169,187 @@ div.csl-indent {
 }
 </style>
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -163,17 +363,24 @@ div.csl-indent {
 
 <h1 class="title toc-ignore">Introduction to scanstatistics</h1>
 <h4 class="author">Benjamin Allévius</h4>
-<h4 class="date">2022-04-15</h4>
+<h4 class="date">2022-10-24</h4>
 
 
 
 <div id="what-are-scan-statistics" class="section level2">
 <h2>What are scan statistics?</h2>
-<p>Scan statistics are used to detect anomalous clusters in spatial or space-time data. The gist of the methodology, at least in this package, is this:</p>
+<p>Scan statistics are used to detect anomalous clusters in spatial or
+space-time data. The gist of the methodology, at least in this package,
+is this:</p>
 <ol style="list-style-type: decimal">
-<li>Monitor one or more data streams at multiple <em>locations</em> over intervals of time.</li>
-<li>Form a set of space-time <em>clusters</em>, each consisting of (1) a collection of locations, and (2) an interval of time stretching from the present to some number of time periods in the past.</li>
-<li>For each cluster, compute a statistic based on both the observed and the expected responses. Report the clusters with the largest statistics.</li>
+<li>Monitor one or more data streams at multiple <em>locations</em> over
+intervals of time.</li>
+<li>Form a set of space-time <em>clusters</em>, each consisting of (1) a
+collection of locations, and (2) an interval of time stretching from the
+present to some number of time periods in the past.</li>
+<li>For each cluster, compute a statistic based on both the observed and
+the expected responses. Report the clusters with the largest
+statistics.</li>
 </ol>
 </div>
 <div id="main-functions" class="section level2">
@@ -181,59 +388,95 @@ div.csl-indent {
 <div id="scan-statistics" class="section level3">
 <h3>Scan statistics</h3>
 <ul>
-<li><strong><code>scan_eb_poisson</code></strong>: computes the expectation-based Poisson scan statistic <span class="citation">(Neill et al. 2005)</span>.</li>
-<li><strong><code>scan_pb_poisson</code></strong>: computes the (population-based) space-time scan statistic <span class="citation">(Kulldorff 2001)</span>.</li>
-<li><strong><code>scan_eb_negbin</code></strong>: computes the expectation-based negative binomial scan statistic <span class="citation">(Tango, Takahashi, and Kohriyama 2011)</span>.</li>
-<li><strong><code>scan_eb_zip</code></strong>: computes the expectation-based zero-inflated Poisson scan statistic <span class="citation">(Allévius and Höhle 2017)</span>.</li>
-<li><strong><code>scan_permutation</code></strong>: computes the space-time permutation scan statistic <span class="citation">(Kulldorff et al. 2005)</span>.</li>
-<li><strong><code>scan_bayes_negbin</code></strong>: computes the Bayesian Spatial scan statistic <span class="citation">(Neill, Moore, and Cooper 2006)</span>, extended to a space-time setting.</li>
+<li><strong><code>scan_eb_poisson</code></strong>: computes the
+expectation-based Poisson scan statistic <span class="citation">(Neill
+et al. 2005)</span>.</li>
+<li><strong><code>scan_pb_poisson</code></strong>: computes the
+(population-based) space-time scan statistic <span class="citation">(Kulldorff 2001)</span>.</li>
+<li><strong><code>scan_eb_negbin</code></strong>: computes the
+expectation-based negative binomial scan statistic <span class="citation">(Tango, Takahashi, and Kohriyama 2011)</span>.</li>
+<li><strong><code>scan_eb_zip</code></strong>: computes the
+expectation-based zero-inflated Poisson scan statistic <span class="citation">(Allévius and Höhle 2017)</span>.</li>
+<li><strong><code>scan_permutation</code></strong>: computes the
+space-time permutation scan statistic <span class="citation">(Kulldorff
+et al. 2005)</span>.</li>
+<li><strong><code>scan_bayes_negbin</code></strong>: computes the
+Bayesian Spatial scan statistic <span class="citation">(Neill, Moore,
+and Cooper 2006)</span>, extended to a space-time setting.</li>
 </ul>
 </div>
 <div id="zone-creation" class="section level3">
 <h3>Zone creation</h3>
 <ul>
-<li><strong><code>knn_zones</code></strong>: Creates a set of spatial <em>zones</em> (groups of locations) to scan for anomalies. Input is a matrix in which rows are the enumerated locations, and columns the <span class="math inline">\(k\)</span> nearest neighbors. To create such a matrix, the following two functions are useful:
+<li><strong><code>knn_zones</code></strong>: Creates a set of spatial
+<em>zones</em> (groups of locations) to scan for anomalies. Input is a
+matrix in which rows are the enumerated locations, and columns the <span class="math inline">\(k\)</span> nearest neighbors. To create such a
+matrix, the following two functions are useful:
 <ul>
-<li><strong><code>coords_to_knn</code></strong>: use <code>stats::dist</code> to get the <span class="math inline">\(k\)</span> nearest neighbors of each location into a format usable by <code>knn_zones</code>.</li>
-<li><strong><code>dist_to_knn</code></strong>: use an already computed distance matrix to get the <span class="math inline">\(k\)</span> nearest neighbors of each location into a format usable by <code>knn_zones</code>.</li>
+<li><strong><code>coords_to_knn</code></strong>: use
+<code>stats::dist</code> to get the <span class="math inline">\(k\)</span> nearest neighbors of each location into
+a format usable by <code>knn_zones</code>.</li>
+<li><strong><code>dist_to_knn</code></strong>: use an already computed
+distance matrix to get the <span class="math inline">\(k\)</span>
+nearest neighbors of each location into a format usable by
+<code>knn_zones</code>.</li>
 </ul></li>
-<li><strong><code>flexible_zones</code></strong>: An alternative to <code>knn_zones</code> that uses the adjacency structure of locations to create a richer set of zones. The additional input is an adjacency matrix, but otherwise works as <code>knn_zones</code>.</li>
+<li><strong><code>flexible_zones</code></strong>: An alternative to
+<code>knn_zones</code> that uses the adjacency structure of locations to
+create a richer set of zones. The additional input is an adjacency
+matrix, but otherwise works as <code>knn_zones</code>.</li>
 </ul>
 </div>
 <div id="miscellaneous" class="section level3">
 <h3>Miscellaneous</h3>
 <ul>
-<li><strong><code>score_locations</code></strong>: Score each location by how likely it is to have an ongoing anomaly in it. This score is heuristically motivated.</li>
-<li><strong><code>top_clusters</code></strong>: Get the top <span class="math inline">\(k\)</span> space-time clusters, either overlapping or non-overlapping in the spatial dimension.</li>
-<li><strong><code>df_to_matrix</code></strong>: Convert a data frame with data for each location and time point to a matrix with locations along the column dimension and time along the row dimension, with the selected data as values.</li>
+<li><strong><code>score_locations</code></strong>: Score each location
+by how likely it is to have an ongoing anomaly in it. This score is
+heuristically motivated.</li>
+<li><strong><code>top_clusters</code></strong>: Get the top <span class="math inline">\(k\)</span> space-time clusters, either overlapping
+or non-overlapping in the spatial dimension.</li>
+<li><strong><code>df_to_matrix</code></strong>: Convert a data frame
+with data for each location and time point to a matrix with locations
+along the column dimension and time along the row dimension, with the
+selected data as values.</li>
 </ul>
 </div>
 </div>
 <div id="example-brain-cancer-in-new-mexico" class="section level2">
 <h2>Example: Brain cancer in New Mexico</h2>
-<p>To demonstrate the scan statistics in this package, we will use a dataset of the annual number of brain cancer cases in the counties of New Mexico, for the years 1973-1991. This data was studied by <span class="citation">Kulldorff et al. (1998)</span>, who detected a cluster of cancer cases in the counties Los Alamos and Santa Fe during the years 1986-1989, though the excess of brain cancer in this cluster was not deemed statistically significant. The data originally comes from the package <em>rsatscan</em> <span class="citation">(Kleinman 2015)</span>, which provides an interface to the program <a href="http://www.satscan.org">SaTScan</a>, but it has been aggregated and extended for the <em>scanstatistics</em> package.</p>
-<p>To get familiar with the counties of New Mexico, we begin by plotting them on a map using the data frames <code>NM_map</code> and <code>NM_geo</code> supplied by the <em>scanstatistics</em> package:</p>
+<p>To demonstrate the scan statistics in this package, we will use a
+dataset of the annual number of brain cancer cases in the counties of
+New Mexico, for the years 1973-1991. This data was studied by <span class="citation">Kulldorff et al. (1998)</span>, who detected a cluster
+of cancer cases in the counties Los Alamos and Santa Fe during the years
+1986-1989, though the excess of brain cancer in this cluster was not
+deemed statistically significant. The data originally comes from the
+package <em>rsatscan</em> <span class="citation">(Kleinman 2015)</span>,
+which provides an interface to the program <a href="https://www.satscan.org">SaTScan</a>, but it has been aggregated
+and extended for the <em>scanstatistics</em> package.</p>
+<p>To get familiar with the counties of New Mexico, we begin by plotting
+them on a map using the data frames <code>NM_map</code> and
+<code>NM_geo</code> supplied by the <em>scanstatistics</em> package:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scanstatistics)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
-<pre><code>## Registered S3 method overwritten by &#39;ggplot2&#39;:
-##   method        from
-##   print.element sets</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load map data</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NM_map)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NM_geo)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot map with labels at centroids</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> NM_map,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group),</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> NM_geo, </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> center_long, <span class="at">y =</span> center_lat, <span class="at">label =</span> county)) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Counties of New Mexico&quot;</span>)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load map data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NM_map)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NM_geo)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot map with labels at centroids</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> NM_map,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> NM_geo, </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> center_long, <span class="at">y =</span> center_lat, <span class="at">label =</span> county)) <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Counties of New Mexico&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>We can further obtain the yearly number of cases and the population for each country for the years 1973-1991 from the data table <code>NM_popcas</code> provided by the package:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NM_popcas)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(NM_popcas)</span></code></pre></div>
+<p>We can further obtain the yearly number of cases and the population
+for each country for the years 1973-1991 from the data table
+<code>NM_popcas</code> provided by the package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(NM_popcas)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(NM_popcas)</span></code></pre></div>
 <pre><code>##   year     county population count
 ## 1 1973 bernalillo     353813    16
 ## 2 1974 bernalillo     357520    16
@@ -241,27 +484,61 @@ div.csl-indent {
 ## 4 1976 bernalillo     378483    16
 ## 5 1977 bernalillo     388471    15
 ## 6 1978 bernalillo     398130    18</code></pre>
-<p>It should be noted that Cibola county was split from Valencia county in 1981, and cases in Cibola have been counted to Valencia in the data.</p>
+<p>It should be noted that Cibola county was split from Valencia county
+in 1981, and cases in Cibola have been counted to Valencia in the
+data.</p>
 <div id="a-scan-statistic-for-poisson-data" class="section level3">
 <h3>A scan statistic for Poisson data</h3>
-<p>The Poisson distribution is a natural first option when dealing with count data. The <em>scanstatistics</em> package provides the two functions <code>scan_eb_poisson</code> and <code>scan_pb_poisson</code> with this distributional assumption. The first is an expectation-based<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> scan statistic for univariate Poisson-distributed data proposed by <span class="citation">Neill et al. (2005)</span>, and we focus on this one in the example below. The second scan statistic is the population-based scan statistic proposed by <span class="citation">Kulldorff (2001)</span>.</p>
+<p>The Poisson distribution is a natural first option when dealing with
+count data. The <em>scanstatistics</em> package provides the two
+functions <code>scan_eb_poisson</code> and <code>scan_pb_poisson</code>
+with this distributional assumption. The first is an expectation-based<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> scan
+statistic for univariate Poisson-distributed data proposed by <span class="citation">Neill et al. (2005)</span>, and we focus on this one in
+the example below. The second scan statistic is the population-based
+scan statistic proposed by <span class="citation">Kulldorff
+(2001)</span>.</p>
 <div id="theoretical-motivation" class="section level4">
 <h4>Theoretical motivation</h4>
-<p>For the expectation-based Poisson scan statistic, the null hypothesis of no anomaly states that at each location <span class="math inline">\(i\)</span> and duration <span class="math inline">\(t\)</span>, the observed count is Poisson-distributed with expected value <span class="math inline">\(\mu_{it}\)</span>: <span class="math display">\[
- H_0 \! : Y_{it} \sim \textrm{Poisson}(\mu_{it}),
-\]</span> for locations <span class="math inline">\(i=1,\ldots,m\)</span> and durations <span class="math inline">\(t=1,\ldots,T\)</span>, with <span class="math inline">\(T\)</span> being the maximum duration considered. Under the alternative hypothesis, there is a space-time cluster <span class="math inline">\(W\)</span> consisting of a spatial zone <span class="math inline">\(Z \subset \{1,\ldots,m\}\)</span> and a time window <span class="math inline">\(D = \{1, 2, \ldots, d\} \subseteq \{1,2,\ldots,T\}\)</span> such that the counts in <span class="math inline">\(W\)</span> have their expected values inflated by a factor <span class="math inline">\(q_W &gt; 1\)</span> compared to the null hypothesis: <span class="math display">\[
+<p>For the expectation-based Poisson scan statistic, the null hypothesis
+of no anomaly states that at each location <span class="math inline">\(i\)</span> and duration <span class="math inline">\(t\)</span>, the observed count is
+Poisson-distributed with expected value <span class="math inline">\(\mu_{it}\)</span>: <span class="math display">\[
+H_0 \! : Y_{it} \sim \textrm{Poisson}(\mu_{it}),
+\]</span> for locations <span class="math inline">\(i=1,\ldots,m\)</span> and durations <span class="math inline">\(t=1,\ldots,T\)</span>, with <span class="math inline">\(T\)</span> being the maximum duration considered.
+Under the alternative hypothesis, there is a space-time cluster <span class="math inline">\(W\)</span> consisting of a spatial zone <span class="math inline">\(Z \subset \{1,\ldots,m\}\)</span> and a time
+window <span class="math inline">\(D = \{1, 2, \ldots, d\} \subseteq
+\{1,2,\ldots,T\}\)</span> such that the counts in <span class="math inline">\(W\)</span> have their expected values inflated by
+a factor <span class="math inline">\(q_W &gt; 1\)</span> compared to the
+null hypothesis: <span class="math display">\[
 H_1 \! : Y_{it} \sim \textrm{Poisson}(q_W \mu_{it}), ~~(i,t) \in W.
-\]</span> For locations and durations outside of this window, counts are assumed to be distributed as under the null hypothesis. Calculating the scan statistic then involves three steps:</p>
+\]</span> For locations and durations outside of this window, counts are
+assumed to be distributed as under the null hypothesis. Calculating the
+scan statistic then involves three steps:</p>
 <ul>
-<li>For each space-time window <span class="math inline">\(W\)</span>, find the maximum likelihood estimate of <span class="math inline">\(q_W\)</span>, treating all <span class="math inline">\(\mu_{it}\)</span>’s as constants.</li>
-<li>Plug the estimated <span class="math inline">\(q_W\)</span> into (the logarithm of) a likelihood ratio with the likelihood of the alternative hypothesis in the numerator and the likelihood under the null hypothesis (in which <span class="math inline">\(q_W=1\)</span>) in the denominator, again for each <span class="math inline">\(W\)</span>.</li>
-<li>Take the scan statistic as the maximum of these likelihood ratios, and the corresponding window <span class="math inline">\(W^*\)</span> as the most likely cluster (MLC).</li>
+<li>For each space-time window <span class="math inline">\(W\)</span>,
+find the maximum likelihood estimate of <span class="math inline">\(q_W\)</span>, treating all <span class="math inline">\(\mu_{it}\)</span>’s as constants.</li>
+<li>Plug the estimated <span class="math inline">\(q_W\)</span> into
+(the logarithm of) a likelihood ratio with the likelihood of the
+alternative hypothesis in the numerator and the likelihood under the
+null hypothesis (in which <span class="math inline">\(q_W=1\)</span>) in
+the denominator, again for each <span class="math inline">\(W\)</span>.</li>
+<li>Take the scan statistic as the maximum of these likelihood ratios,
+and the corresponding window <span class="math inline">\(W^*\)</span> as
+the most likely cluster (MLC).</li>
 </ul>
 </div>
 <div id="using-the-poisson-scan-statistic" class="section level4">
 <h4>Using the Poisson scan statistic</h4>
-<p>The first argument to any of the scan statistics in this package should be a matrix (or array) of observed counts, whether they be integer counts or real-valued “counts.” In such a matrix, the columns should represent locations and the rows the time intervals, ordered chronologically from the earliest interval in the first row to the most recent in the last. In this example we would like to detect a potential cluster of brain cancer in the counties of New Mexico during the years 1986-1989, so we begin by retrieving the count and population data from that period and reshaping them to a matrix using the helper function <code>df_to_matrix</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<p>The first argument to any of the scan statistics in this package
+should be a matrix (or array) of observed counts, whether they be
+integer counts or real-valued “counts”. In such a matrix, the columns
+should represent locations and the rows the time intervals, ordered
+chronologically from the earliest interval in the first row to the most
+recent in the last. In this example we would like to detect a potential
+cluster of brain cancer in the counties of New Mexico during the years
+1986-1989, so we begin by retrieving the count and population data from
+that period and reshaping them to a matrix using the helper function
+<code>df_to_matrix</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;dplyr&#39;</code></pre>
 <pre><code>## The following objects are masked from &#39;package:stats&#39;:
@@ -270,49 +547,82 @@ H_1 \! : Y_{it} \sim \textrm{Poisson}(q_W \mu_{it}), ~~(i,t) \in W.
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> NM_popcas <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1986</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">1990</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">df_to_matrix</span>(<span class="at">time_col =</span> <span class="st">&quot;year&quot;</span>, <span class="at">location_col =</span> <span class="st">&quot;county&quot;</span>, <span class="at">value_col =</span> <span class="st">&quot;count&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> NM_popcas <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1986</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">1990</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">df_to_matrix</span>(<span class="at">time_col =</span> <span class="st">&quot;year&quot;</span>, <span class="at">location_col =</span> <span class="st">&quot;county&quot;</span>, <span class="at">value_col =</span> <span class="st">&quot;count&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: `spread_()` was deprecated in tidyr 1.2.0.
+## Please use `spread()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
 </div>
 <div id="spatial-zones" class="section level4">
 <h4>Spatial zones</h4>
-<p>The second argument to <code>scan_eb_poisson</code> should be a list of integer vectors, each such vector being a <em>zone</em>, which is the name for the spatial component of a potential outbreak cluster. Such a zone consists of one or more locations grouped together according to their similarity across features, and each location is numbered as the corresponding column index of the <code>counts</code> matrix above (indexing starts at 1).</p>
-<p>In this example, the locations are the counties of New Mexico and the features are the coordinates of the county seats. These are made available in the data table <code>NM_geo</code>. Similarity will be measured using the geographical distance between the seats of the counties, taking into account the curvature of the earth. A distance matrix is calculated using the <code>spDists</code> function from the <em>sp</em> package, which is then passed to <code>dist_to_knn</code> (with <span class="math inline">\(k=15\)</span> neighbors) and on to <code>knn_zones</code>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sp)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Cibola since cases have been counted towards Valencia. Ideally, this</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># should be accounted for when creating the zones.</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>zones <span class="ot">&lt;-</span> NM_geo <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(county <span class="sc">!=</span> <span class="st">&quot;cibola&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(seat_long, seat_lat) <span class="sc">%&gt;%</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  as.matrix <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spDists</span>(<span class="at">x =</span> ., <span class="at">y =</span> ., <span class="at">longlat =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dist_to_knn</span>(<span class="at">k =</span> <span class="dv">15</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  knn_zones</span></code></pre></div>
+<p>The second argument to <code>scan_eb_poisson</code> should be a list
+of integer vectors, each such vector being a <em>zone</em>, which is the
+name for the spatial component of a potential outbreak cluster. Such a
+zone consists of one or more locations grouped together according to
+their similarity across features, and each location is numbered as the
+corresponding column index of the <code>counts</code> matrix above
+(indexing starts at 1).</p>
+<p>In this example, the locations are the counties of New Mexico and the
+features are the coordinates of the county seats. These are made
+available in the data table <code>NM_geo</code>. Similarity will be
+measured using the geographical distance between the seats of the
+counties, taking into account the curvature of the earth. A distance
+matrix is calculated using the <code>spDists</code> function from the
+<em>sp</em> package, which is then passed to <code>dist_to_knn</code>
+(with <span class="math inline">\(k=15\)</span> neighbors) and on to
+<code>knn_zones</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sp)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Cibola since cases have been counted towards Valencia. Ideally, this</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># should be accounted for when creating the zones.</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>zones <span class="ot">&lt;-</span> NM_geo <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(county <span class="sc">!=</span> <span class="st">&quot;cibola&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(seat_long, seat_lat) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  as.matrix <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spDists</span>(<span class="at">x =</span> ., <span class="at">y =</span> ., <span class="at">longlat =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dist_to_knn</span>(<span class="at">k =</span> <span class="dv">15</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  knn_zones</span></code></pre></div>
 </div>
 <div id="baselines" class="section level4">
 <h4>Baselines</h4>
-<p>The advantage of expectation-based scan statistics is that parameters such as the expected value can be modelled and estimated from past data e.g. by some form of regression. For the expectation-based Poisson scan statistic, we can use a (very simple) Poisson GLM to estimate the expected value of the count in each county and year, accounting for the different populations in each region. Similar to the <code>counts</code> argument, the expected values should be passed as a matrix to the <code>scan_eb_poisson</code> function:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(count <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(population)) <span class="sc">+</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">I</span>(year <span class="sc">-</span> <span class="dv">1985</span>),</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;log&quot;</span>),</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> NM_popcas <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">&lt;</span> <span class="dv">1986</span>))</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>ebp_baselines <span class="ot">&lt;-</span> NM_popcas <span class="sc">%&gt;%</span> </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1986</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">1990</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mu =</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> ., <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">df_to_matrix</span>(<span class="at">value_col =</span> <span class="st">&quot;mu&quot;</span>)</span></code></pre></div>
-<p>Note that the population numbers are (perhaps poorly) interpolated from the censuses conducted in 1973, 1982, and 1991.</p>
+<p>The advantage of expectation-based scan statistics is that parameters
+such as the expected value can be modelled and estimated from past data
+e.g. by some form of regression. For the expectation-based Poisson scan
+statistic, we can use a (very simple) Poisson GLM to estimate the
+expected value of the count in each county and year, accounting for the
+different populations in each region. Similar to the <code>counts</code>
+argument, the expected values should be passed as a matrix to the
+<code>scan_eb_poisson</code> function:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(count <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(population)) <span class="sc">+</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">I</span>(year <span class="sc">-</span> <span class="dv">1985</span>),</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;log&quot;</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> NM_popcas <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">&lt;</span> <span class="dv">1986</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>ebp_baselines <span class="ot">&lt;-</span> NM_popcas <span class="sc">%&gt;%</span> </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1986</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">1990</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mu =</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> ., <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">df_to_matrix</span>(<span class="at">value_col =</span> <span class="st">&quot;mu&quot;</span>)</span></code></pre></div>
+<p>Note that the population numbers are (perhaps poorly) interpolated
+from the censuses conducted in 1973, 1982, and 1991.</p>
 </div>
 <div id="calculation" class="section level4">
 <h4>Calculation</h4>
-<p>We can now calculate the Poisson scan statistic. To give us more confidence in our detection results, we will perform 999 Monte Carlo replications, by which data is generated using the parameters from the null hypothesis and a new scan statistic calculated. This is then summarized in a <span class="math inline">\(P\)</span>-value, calculated as the proportion of times the replicated scan statistics exceeded the observed one. The output of <code>scan_poisson</code> is an object of class “scanstatistic,” which comes with the print method seen below.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>poisson_result <span class="ot">&lt;-</span> <span class="fu">scan_eb_poisson</span>(<span class="at">counts =</span> counts, </span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">zones =</span> zones, </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">baselines =</span> ebp_baselines,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">n_mcsim =</span> <span class="dv">999</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(poisson_result)</span></code></pre></div>
+<p>We can now calculate the Poisson scan statistic. To give us more
+confidence in our detection results, we will perform 999 Monte Carlo
+replications, by which data is generated using the parameters from the
+null hypothesis and a new scan statistic calculated. This is then
+summarized in a <span class="math inline">\(P\)</span>-value, calculated
+as the proportion of times the replicated scan statistics exceeded the
+observed one. The output of <code>scan_poisson</code> is an object of
+class “scanstatistic”, which comes with the print method seen below.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>poisson_result <span class="ot">&lt;-</span> <span class="fu">scan_eb_poisson</span>(<span class="at">counts =</span> counts, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">zones =</span> zones, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">baselines =</span> ebp_baselines,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">n_mcsim =</span> <span class="dv">999</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(poisson_result)</span></code></pre></div>
 <pre><code>## Data distribution:                Poisson
 ## Type of scan statistic:           expectation-based
 ## Setting:                          univariate
@@ -324,102 +634,150 @@ H_1 \! : Y_{it} \sim \textrm{Poisson}(q_W \mu_{it}), ~~(i,t) \in W.
 ## Gumbel P-value:                   NULL
 ## Most likely event duration:       4
 ## ID of locations in MLC:           15, 26</code></pre>
-<p>As we can see, the most likely cluster for an anomaly stretches from 1986-1989 and involves the locations numbered 15 and 26, which correspond to the counties</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>counties <span class="ot">&lt;-</span> <span class="fu">as.character</span>(NM_geo<span class="sc">$</span>county)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>counties[<span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">26</span>)]</span></code></pre></div>
+<p>As we can see, the most likely cluster for an anomaly stretches from
+1986-1989 and involves the locations numbered 15 and 26, which
+correspond to the counties</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>counties <span class="ot">&lt;-</span> <span class="fu">as.character</span>(NM_geo<span class="sc">$</span>county)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>counties[<span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">26</span>)]</span></code></pre></div>
 <pre><code>[1] &quot;losalamos&quot; &quot;santafe&quot;  </code></pre>
-<p>These are the same counties detected by <span class="citation">Kulldorff et al. (1998)</span>, though their analysis was retrospective rather than prospective as ours was. Ours was also data dredging as we used the same study period with hopes of detecting the same cluster.</p>
+<p>These are the same counties detected by <span class="citation">Kulldorff et al. (1998)</span>, though their analysis
+was retrospective rather than prospective as ours was. Ours was also
+data dredging as we used the same study period with hopes of detecting
+the same cluster.</p>
 </div>
 <div id="a-heuristic-score-for-locations" class="section level4">
 <h4>A heuristic score for locations</h4>
-<p>We can score each county according to how likely it is to be part of a cluster in a heuristic fashion using the function <code>score_locations</code>, and visualize the results on a heatmap as follows:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate scores and add column with county names</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>county_scores <span class="ot">&lt;-</span> <span class="fu">score_locations</span>(poisson_result, zones)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>county_scores <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">county =</span> <span class="fu">factor</span>(counties[<span class="sc">-</span><span class="fu">length</span>(counties)], </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">levels =</span> <span class="fu">levels</span>(NM_geo<span class="sc">$</span>county)))</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a table for plotting</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>score_map_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(NM_map, county_scores, <span class="at">by =</span> <span class="st">&quot;county&quot;</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(group, order)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># As noted before, Cibola county counts have been attributed to Valencia county</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>score_map_df[score_map_df<span class="sc">$</span>subregion <span class="sc">==</span> <span class="st">&quot;cibola&quot;</span>, ] <span class="sc">%&lt;&gt;%</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">relative_score =</span> score_map_df <span class="sc">%&gt;%</span> </span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">filter</span>(subregion <span class="sc">==</span> <span class="st">&quot;valencia&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">select</span>(relative_score) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                          .[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> .[<span class="dv">1</span>])</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> score_map_df,</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group, </span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fill =</span> relative_score),</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#e5f5f9&quot;</span>, <span class="at">high =</span> <span class="st">&quot;darkgreen&quot;</span>,</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">guide =</span> <span class="fu">guide_colorbar</span>(<span class="at">title =</span> <span class="st">&quot;Relative</span><span class="sc">\n</span><span class="st">Score&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> NM_geo, </span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> center_long, <span class="at">y =</span> center_lat, <span class="at">label =</span> county),</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;County scores&quot;</span>)</span></code></pre></div>
+<p>We can score each county according to how likely it is to be part of
+a cluster in a heuristic fashion using the function
+<code>score_locations</code>, and visualize the results on a heatmap as
+follows:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate scores and add column with county names</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>county_scores <span class="ot">&lt;-</span> <span class="fu">score_locations</span>(poisson_result, zones)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>county_scores <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">county =</span> <span class="fu">factor</span>(counties[<span class="sc">-</span><span class="fu">length</span>(counties)], </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">levels =</span> <span class="fu">levels</span>(NM_geo<span class="sc">$</span>county)))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a table for plotting</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>score_map_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(NM_map, county_scores, <span class="at">by =</span> <span class="st">&quot;county&quot;</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(group, order)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># As noted before, Cibola county counts have been attributed to Valencia county</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>score_map_df[score_map_df<span class="sc">$</span>subregion <span class="sc">==</span> <span class="st">&quot;cibola&quot;</span>, ] <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">relative_score =</span> score_map_df <span class="sc">%&gt;%</span> </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">filter</span>(subregion <span class="sc">==</span> <span class="st">&quot;valencia&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">select</span>(relative_score) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                          .[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> .[<span class="dv">1</span>])</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> score_map_df,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group, </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fill =</span> relative_score),</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#e5f5f9&quot;</span>, <span class="at">high =</span> <span class="st">&quot;darkgreen&quot;</span>,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">guide =</span> <span class="fu">guide_colorbar</span>(<span class="at">title =</span> <span class="st">&quot;Relative</span><span class="sc">\n</span><span class="st">Score&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> NM_geo, </span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> center_long, <span class="at">y =</span> center_lat, <span class="at">label =</span> county),</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;County scores&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAq4AAAHgCAIAAADrJ3jQAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nOzde3RT1503/K9TG1u+SLIk3++2ZMA3wtXEhhiTNBM7iUMyhL4wbehMpiaszKrN22TePpM805V5kj6dph3wrOmiuMPTITMDawgNxAl2miZcAnYwEAjYmGDJ9/tFliVfhDHP6P3jnCMdyZIs27pav8/KWj1na599tpLC/mlfAwwGAwghhBDirx7xdAUIIYQQ4kkUChBCCCF+jUIBQgghxK9RKEAIIYT4NQoFCCGEEL9GoQAhhBDi1ygUIIQQQvwahQKEEEKIX/POUEBVV7WvsDCAVVi4r07lrjdX7SvcV+emlxFCCCGeF+B1uw2qqgoVlQ1zkgvKa+uPlLjl5Tm1Bte/iRBCCPEO3tYrULdPUdkAFJTXKpUGhlJ5qLwADdWl9GudEEIIcTrvCgVUVe9UAwWHlPVHSuRyNlEurzhy7FABUP1OlWmcQFW3zzSCwB9AUFUVBgQU8nIyKWwcwX5aV1fFDUAU7mPzqqoKAxSVDUB1KVNA3b4A43Osun0WZfPfYqNCZpU1vs3BL7KvTlXFfMx9xMs/Z+TEXh0IIYQQ6wxeRHmoAEB5rdXPjL0EBoOhtrzA8nsUHFLyCjHeGVPYUplXWCqvtfyo4JDSYKgtt6hObblF0eY1n1um8SmrVXXkixQU8JOtvMc8v606EEIIITZ4Va+AsqUBKN9hdZxebuwlgKrqneoGoLyW3wY2VO61/mvdOu5hpv2sPlMHyCvqTVFDfYUcKNlRzn7GqDtTjYJdz8jnlKY6e7IBBeYV4p4z9nQYDAaDsrYcaDh5VmX8aJ4v0tAA5sn6CjlUVXsrzd5Te6gADZXv1c1XB0IIIcQmrwoFHKM6e7IBKK89UsK2yfKKerMWdn6mh+UVb5XbzmceC9iMBBgNze+8V1VVp1JBXlFvMLBTD5kW+tCxCjkAyEuOsM26o1+k/K0K7oVcUab8JRXHDhXwG3zrdSCEEEJs88FQAMCcvoOSHXYa9DkKshSmG0WWtSEDfrlsU2snEmACioaG6srKUoWCmRLAH6nPybQVP8z3RfhVVbY0AA2VigAeRWUD0Nyqmr8OhBBCiFVeFQoosmx3aquq9nmibTPFAvb7BEqOGJS1h4wj/w3VlaUKd6948IY6EEII8TleFQrIn9lluVCAU/deZXVDdQu4ltgiYKg7U20sJDMHaGhRmj5UtszdpsBhXCwwz+gAAHlJxZF6g8FgUCprD5Wb1bG51WYIY/uLzKHIKrA+E7DeOIZgpw6EEEKIVV4VCnCd3JWKwn11Kq71VKmq9hWWVgMFh94ogTFgKDUullNVMR/zG+rqM6YlgqW2W1erzBvukjcOFaD5nXfsRQJ1+wICAgq5Pgu5XJGZVcB27suf2VXAmwqoqmKyqhz9Ivx/O8/sKkB1aaGpb0RVV1XILXi0UwdCCCHEDmcvSVgy68v9LBf12V5TN2fxXkF5ucViQptLDU0v52fhEu0szbNWaWMRlosJzdYZLmRVpJWieA/YrQMhhBBig/eFAgYDM+JtatcKTEvkeHlMg+KY87nxw4LyQ8q5+wrYDgVMjTO/SHv7HVivkEWNlKYm33ZdLT+0FgrM9x47nxFCCCFWed8ZBF6obl9AaXU5nUxACCFkOfKuuQLeSFW3751qbp4CIYQQstwEeroC3qxuXwA75bDgkL21A4QQQojvol4BO9jdhwrKa03L9QghhJDlheYKEEIIIX6NegUIIYQQv0ahACGEEOLXKBQghBBC/BqFAoQQQohfo1CAEEII8WtetK/A6Oioi0qWyWSuK9xr0bf2K/75xelb+xUnfnGZTOaUcpYN6hUghBBC/BqFAoQQQohfo1CAEEII8WsUChBCCCF+jUIBQgghxK9RKEAIIYT4NQoFCCGEEL9GoQAhhBDi1ygUIIQQQvwahQKEEEKIX6NQgBBCCPFrFAoQQgghfo1CAUIIIcSvUShACCGE+DUKBQghhBC/Fujk8hoPlr17HgBQ/GbNgXyg71TF/vc7+FnYDwghhBDiBZwaCvSdqngXb9bUsBHAwcaaA/kJO6tqdnIZGg+WHU/aRXEAIYQQ4jWcGgok7Kyq4S4f25r2fkPjgXxeu9948N3Olw8fSHDmK71IU1PTvHlyc3PdUBNCCFke+H+vFhcXe7Amy5uzBwg4fV9d6ijew//933fq+PniPTXmgcCGDRuM19evX3diBc6fP+/E0hwRlhE7bx5HwoXlx+of4KX/B7L194JMJltiyT7KP784fevlZO5fCzHZK5mLoTv3sHy/uMe5IBRgZwekvXyYHwk0nnwf5imAefM/Ojrq3Io40ja7mRdWyQ2stvptAZ1LL3epJRBCvImx4bfFWc0EhRQWXBAKsLMDGg+WVZw6XLWT6QZobDiftvXwch0bIPNxQsPvljJ9VIYh9VT7cU/XYjF2pu+Zlv63p2vhS0LVj8zbXhKyUK5bTJhfUNzR08veNDacT9v6GEUCfmiqbZDabFdrC+jcmb7H07UghPgqp4YCjQfLKk71cTcN59OSEpnrvp5OigT8EcUBxL5T7cdD1bS7CSEe5tQBgvwDh3sq9pe9DwBIe9k4OoDeng4kOfNNxDeEZcRmtFFPPrHnVPvxnaBhAkI8yclzBcx2ETDJP1BDmwn4nam2QdCIPnEAEw0AoICAEI9w1WJC4s8oCCCLQHEAIZ5Co3TEmabaBpn5ARQHuBnNHCSELBr1ChDnoJ4Asmi0pJAQz6JQgCwVBQHewHe3FiCEeByFAmTxKAggS0ddAoR4HM0VIIvBzAkAxQFkyZitBWh3AUI8iP74kUWiuYHEWWhogxDPolCAEEII8WsUChCyHNBiQkLIolEoQAghhPg1CgUIIR5GiwjIvGKyV54/f97TtVi2KBQghBBC/BqFAoQsE744XWBn+h7qEiDE42iLIUKIW/HjFQoCFmpa+t9Dd+7FZK/0dEXIskKhACHEfagPgBAvRKEAWTDm7EFP14JY8v5jCLw9DtDe/ex4Z/KeklUiTNyu+7h+BIhat6dklcjTFSPExSgUIIS4g7fHAWb67taPyJ95eVOypytCiFvQtEFCloMFdwlMascnXVabOXwqDgC0unFECakzgPgN6hUgxP9MDt89p5Fsd1Nb59E4QPft6TM3BgEAWU/sKUqYLx3Q3v3s7LVRYPT4+zeYj7R3Pzt+bZT7XFa446k84cTtuo/rwQ0f9F09/MV44Y6n8oRu+lqEOBWFAoQQF/J8HCB5Ys8LCUxrfTWN6fPnp+u+PX3m+EVeNCBa/dQeGCcNAH1Xj18TP/PyU8kAmDkEd/rzHovPK9mmef/CN32rihL6L36hynpiD8UBxGdRKOAFxm/V/F6V/pd/niP2dE2Iz2I2FXBojGBy+O653klg8tyNsZzs1enBxhRGOJMIADNDl+90jwEAUjI2rhFZlMCIyl+XGuPEr+I82r7uwah125k2PmHT/pfZ9O47NwYV215g0oWr1itunO3uL0qIt15IxOr9L0dwdxEpqbL6Tp0W8SLEP7pRdvz2t2m67hbFtv0JVp8mxCdQKOAFxGvKDqzxdCWWF13bpQ/7E17cmu7c32nGYuGa8t0jPHr1dtw9p5FsXxkTDkDbea5XkL9udQwA3G+/19Q8NJ6eLGbigIiMjVtETExw7VbGxjUibnBh3epwAExYcKPTdjRwqv34TnioY0A7PgpxjtVhkFixsXWHSCxDp04L66GASBgBoPur42eVXFIUO5tQtPqxws6Pz16TP/Oy9WcJ8REUCpDlSJix9YcZLixW5/yyPWYyJLZsXQh3FxIdGQ7NzCQwNdQ9JlNsYRrS4BiFrLtRO75GJAYAQXA490B49OqyaLdX2p36rh7+QoWodXteXiViFxwaP5vQjABQdfRtSqZeAeLDKBRYmvFbNb+/PMTdrd7x2pY0K+kx275ftlbEDgTskLefYT9i8xsHCGA+UsAfOFhQgYQ4Ljw4BMBQ97VG48S4MAnzv5IQY4iAsBA2RAiPjku5oawZBcxHDWzzWMeA8ef+3DoOdvZpV7MbBhg7D7TWCunuVsVufO6F1WwvgnZ8FGB7Bbq/utCi2LY/udc0C8EPaL7+w7+2yv9695pIT9eEOA+FAkvANtWvlZla7t9c3vHalrSuy7+/LNnxWlkaAOhu/uG/LtzsWbstCQAGv7oq/96B14RM+pkLKQeYdPucXuCyo2u79OFEwqaJ5qtjQEr+ixGtpg78qfbaz5uHAQCZm8sKYniPNGu4AiI3Pbk1K8xaOdaKZZ7p/abmahcAROc8UZoRZqdYt1jAdAEz2s6athGEJW9fFxPOLi6w/4B4zbqNa9gHr3UBkCnKkr1xoosoITn22o1v+lYVJZimChYlIDl7XewZU/rXSmQ9Ya+H3xg3aO9+dlYJRAEA+q6eVTJDA/HPKI6f/Spx/2N+MUwQuf7P31jv6UoQJ/OiUEAmk3m6CosgFRn/CjQO+Y+L8w68ZhxEFqbJYy6otONgWujVm9YIraXbs9ACvfFvZTfoah7fXPbDGADQtbWyiVPttZ83izeXlcYw1zUNTDQwdOvDZuGTz29NBICplktfXFUOZT0aY6Ucq8UCGGvujH/ih8+HYaq99vMvGsLnK9ZbDWlHJIm5W6LZDoCp+5MA2yswptFORoeEG9MFceH8J0WpZetSoe2saRsfShbb/ZIe6hgQrnphB06fOX4YAH/RoK10a5If25b1/oXj798AgKh1e54QH/9Cp0X/N1+oYjc+x/QEJGeviz1z4WKyvXKIM/hmM+EDvCgUGB0dnT+TVxGvWZv7m08P3gGA3Gd/9GQKly4SAui48Lszd7issenchXgRvWpOL3CZSkme0xz1KpuHU/JLmfSw9LyU5s8HhgpiYnTh8h8+b/y1HpYYH3m1f0pnvRwrxTLpeUxPQFj6lpy+D1vbc2LSYaNYb5tdGB4swJR+CmCadmOTPzl8t3EUCAOAmJhkyZ3uNm3MGhEwM6QcRUqGGMxQAkzdAJMzeoRJ3NTxsQjCVS+8vMrBdNHqp/avBgAYLwAgvujlPUW8bMxKhOSXeadA2nqLL7Do8Dfe4us//GurfGem6tQFZv+F7J0/2ZZmkX/81n8evdwPAFjz4mtPpZlKmPvgogzduce/dVYzQSGFBS8KBXxR0pOv/ehJAF2XD37yuyYA2U8f2JaErssHP7mL2Mf+8jVumF+1tPc4vcBlSRJhtcWNjjD9lBVGRIJpm8PCAPR+U/N5l/Fx7gedRTk2ikVKbKKx2HAhxiZ0QKKdYr2KSJwCZeONkZSMjWuSFSk3lOdudANAWPL2DMG5Nv0UEB4csyUbl+9cqwHAmxYQk7wxv/tazQ2uqLBkdiUCWX76Lzdkfv+Nn4gA7dcn/uPUn9Le+G6K6dPxW/959HLUi6/9RRpz/ZvPuGhgngcXJjc3l7mQyWS+94vRR1Ao4BQpWw68tgVdlw9+0tWxLQkdd+O3fO97bL89NJohIN1+AfZ1OLtAgqFb/3alC5KcF59PF7KrBL24WOfjxvstrwGgbB13FRyzZZ2VLpGY5I1lfjJHzt9lF6xn5laK0jNjz7WOa2Bq0TuuXe7Pe/YvmLZfvKYg7/IpVddTaSm2HqT+Sy9GZxAsQceF3x280GO8HR8fM3bX96u6x5nEWzWmXv35iMUSDLZ3MPOYtc1/NC0ZWGSBBMBw/5Bx7Z9uQoOIMCHQO9AVnfPED7mNAXQT88yUs2JiylTspI7pPHBCsYvn/ScTEl8TH2l/4lG8xPS5WBKL0XGNYw8SL0O9AkuQtu1HOy787uBvuPvYx5iFf+JtT+f+5tPf/+YrNvFZye8/GdcA8wfFKVv+ckvN7//jdxcAYPWOZ1efuc68aLEF+r1ERU70583NQ+kFMcBU++0uZG5mf+YO9w/pMtjf7p93GafKOWys+XJbTGlGGKbaLzdrMjdvFQK6pRe7SBQHEEIWjUKBpUnb9qMD2+Ymc3MIOAdeAwCY7ypoWnEAK4nsgymLKZCYhKWXPonaz2v+DQBvMWHio/mZHzV++FEzAEhyXtws/PDKxMLm90lyUie++LePnF0sIb6jv7VTs56dbzg+NgjZhkjAnV1hxEkoFPASvEWJZBEsthc0uw1LL31+7tSKmILnywp49z98HgBgpxz+LXuRnvWoY8W6FnUJkMWLlEjRr2ofX7NeDIzfqr0wiHi5Iw+mbdwSf/TytY41T6UB47cabmPNi4ueG0g8i0IBD+v5/DefNgG5z/rjvkDEGXwlDvDkYQTEnrRtf73tD/969DfnACB754vZp6449qB4zV+8gv88+pv3APAWExIfFGAwGDxdB5ZzV4k0NTWFZcQ6sUBiNNU22BbQ6elaEMB34gCGRw8sXiZC1Y/EZK/0dC3cZ+jOPVcsJqR9BSzQCgJCfJVvxQGEEK9FoQAhPoniAEKIs1AoQAhxBxodIMRrUShAiE9iziHcmb5n/qxegOIAQrwZrSAgxFcxkzeZaMCbBwsoDiDEy1EoQIhv4wcE8L6YgOIAQrwfhQKELAfG5Z3eExMYaxKq9uRAJAUihMyLQgFClhWLmMAjAQHz6l/U/8z9r7bw08K3PV0FQnwAhQKELE+emkmwM32PNwQBjF/U/+ynhW9TxwAh9lEoQBYjw5Dq6Soshh9ukmgMCDw+XuBBnh2hIMT7UShAFuPdS295ugoL9ubWdzxdBY9hVh66Jxo41X78p4Vve1XHgHte9NPCt1sNKle/JTPAoaOCCFkQCpYJ8Qu+tQ+BL/pF/c/c0E63GlRDd+65+i3E31CvACH+wm2DBd7WMeA2zNQEN/QNLC4a8KtzjMiCUChAiH9x52CBv3FPHLC4V9DIArGDBggI8Ts0WEAI4aNQgBB/1BbQ6aKAwJ+DDPdMFyDE6WiAgBD/5aJNi/1wlgAhPo1CAUL83dxNi+EF+xb7KLfNHFwEty09oPmJPodCAUIIi78F0+K6Crxqq0FP8c5owG31oSESX+TsUKDxYNm75wEAxW/WHMhnU/tOVex/vwNA2suHq3YmOPmdhBCnW8RZBn47RYAQX+fUUKDvVMW7eLOmJp9p/A82MsFA48H9PXtqavKBxoNlvzz1GAUDhPgOR84y8J7zh7yEd3YMEGKLU0OBhJ1VNdzlY1vT3m9oPJCfj8aG88UFBwAA+Qdq8m0/TgjxVlYDAmM3gPODAL2u76vpsDWhU7c09wEAIYr4BJm+7yv2VrgmJUrKZJ0d/7pfrQUAxEdnrBJwj8+GKWbVyhkgPG67NFSvMz7LlpYU5OQ6E+KzXDVXoO+rSx3Fe/IB9PV0piUlseMGlgMEGzZsMF5fv37duXWYaht0boHEyLn7+fviiQb+yWLFgYu7AWbUnaHJ21OCgNmewW5lf9twpOn2ljpsuzSUiQPCojPWC5iYoO1bLhrApHoqOmM7c60f+UqzYk1KghRgS9NNJ0lDXVl76hhwFplMZvWaOJELQgF2YkDay4e5HoCO93v21NQcAPpOVZgPEPCb/9HRUedWJHJlinMLJK6gudfltnd5+YGKCzo40UXfxfE6uGE4QJgqZH65B8lCQ5QzK8xupx/oETqtU2vD49Yz7X2QODVcfWt6epWAaeOFUQK2IH2geHuKsRPA9LgALsVEA3DjlD2PywyQO335gLFpkMlkzmomKKSw4IJQIGFnVc1OoPFgWcWpw1U7AaS9vIuJChKSUjuOf9W3kyYLEPfztr4Hfs/Ku5feWkRHy/bj251aI5zbc25u4tyYw11zAoKDQu3cckRBpo7+0KAQTD/QI9QivyAoCIBa3XZr0lhamLOra5UxGiDEm7luMWF+QfG7Db1AflIqelz2FkJ82N99cQDAz584yNxmGFIX1DHgCvw6MEHAspgMqB85N6xDsPSxFLGAnYjg6SoR4kWcGgo0Hiw7nsRNBmhsOJ+WtAtAfkHquycbdx7IZ+YNbN1FXQLEbzj4W5/JZjUOcPOgBv9XrG8EAdrpKb1QzHT1T8/eR1CkANCb51FP60SRyevZ8QVMz94H3NArYPw3mRkg958xAuKLnBoK5B843FOxv+x9APwZgvkH3mwoKysDmM0GKBIg3k4/0X9lOmxzjMgZY8l/98UB6KeHr90P3SgNFxisZwB+/sRBq62+00cB5uUbEQBDKpSK+tVdevEqATA73jmJ+GjrkwGNEYNe13drEgh2Q+1o5iDxFU4eIGDnCVjKP1BTc8C5byJk2XF/q+/7gsTr4/F1fxszycG4mNCCVBoX3zXwVZcaAIKlj0Wv+Gp4dhpw8bRBLDEa0LXXn+6Pf2FLmtAZVem79cnn2LR3TbRziyXLAm08TAjxPgJhwnahY7dB4vUpYvuPA6GrUjJW8e63u2N5kZcuHxCmF+5N93QliHehUIAQ+x5qbwxwO9hEpa8MYZP1E/1Xxo1b1gjzkmRSK+m1Up1lefrp4Wu6B9zdigxZdEIg9NO1x2oxDbRxHyQCIuAOd5sBiLjre8AUAEAGJHOJM7zMFvmJJ9DQAPEhFAoQYsdD7Y0BdVhU+roQ5rr9XlT6yhBuMkFSPLuBzUT/lZ7RvCSZ9P7olfEVeUnxzFY2vUMj1+7oEwN4/dAzmmu6oJy4aIkBwMO+scG2aX0CMydhBIPAOgDAMNALaHi3bdz1PUAArOSuu4FkLg7I5kbAmVuKBjzHmXFA761PrnUzl8lPPpfHTLbStdefvqPhskRu3F6YFQZde/3pifiNE3euaYDkTXvXRGP49rHGbgCIzN4YweY2DhCgvf50f/yT8f2fs0WZyuc/+GR8/+cTir1rop3zfYg3olCAENvUOrU2LHYd0xMQKEoJU9+enl4ZEgoAQUHGFl4QEV8cAQD6QFGxaT/bIGlo1IDm//Jns+u/E/F4XCDYyYOBkpAVbfdNGWK5CxHQO+d2BrgPTHFxAJO/jdcxEMy7WLfIb+y2RfC+NDnRkzR3uuKL9z4XBky1XD7/+a1YpoE/fSfiyecKEwAm/ZpqOItpqrvvaPOf3cu02sO3jzVObNz+bFYYc837/wqv/NvWyjd/UGPlQbKsUChAiF1zdrCZ1QOCCHF8z+D5KcB81EAQGARAPdZ+m+nBR6LFkLQgMBAGjOl6m43r2ldwM96j/uUvzmUJ2cmDr+e+/qv//pWV+vDXwDGvnQGCARlwA4D5qMHCvX3xp4t/eCF+VvQLWx8tgyjBifsMJuelM//NwxLjI6/1T+kAhGXsfc74fwReOgAkJ3O/3vsGupG8KYvJGJ2xMbL7mmPlTzj0IFlOKBQgZDFCVyalrwRwf/T8SHs/gLDYYkko7o+eH9FhhXRzkkiAN9fs+etf/2OoVMp7bkbzpWYKK8Qb48IFBmaRIfPBh+3/Ffrl5+ECw7k956Br+etf/+O//OTc33zi8JqCZC4CuAEwe7MutmPAPezEHPwowafDAmeMEURGRMxJE4aFgVkR0G3MFj8n/5R2AtHx5hHDhCPlO/YgWVYoFCDELu30tD5CxNvBRmy2Ai1EVpwkw/3R8yPTakkopnUicdK6CKYj4d1z/7I1/XsbHy/NQkutujP18dIs3VfHZkQvlGYJ2f0GHj4ALNbBM/sQvJj+Pev1meK6AQAwUYTFCnkmArgBaH11rgA/SjCGBT4XE7hyU4Hh28capwJWPv3igcAIFTP274K3ED9CoQAhtkmFUtGAuvu+aGUI8FDbNYX4qFAwQwCILZawrbh+9gFWhIUC07zQQT/Rf3uqHafvXGkQYaK/a/o1lL57/d/bb8/eCYwRCfDzjT/661//L2DF3Nf+/PGK7f/wN/jvX1k28yIgDBjiOgAGAeZQFS1vXiGAGQDc8IGPM4YFTEzgkYBgQfMnnFXDzAA5Ah6oAh4mBcgzAwDAdNs38lX0nynD3u+8+eXPin7ROnFLA8TPKSFMFIHhiSnjmNLEhGZOHqsW/SDxXRQKEGJHoGhdHG4MtJ8HwJsWIJWk5421nzcerrFCymxNKJDExvcMXulRs4lRK66MzE6zP/z/7cpbIqkpwyvnD/7kJ+9pT3/xvv4Wf6+bnz9xcPvvbY8LrATuzZkWIAIyuERGtnv203MfJiawHxC4aM7jguZPWMyByAyQL/6l+smBTn1Yw5dCdqEKdzut6Wx6KMmPChLg7U//ZuPQRutFJMQlo/HqV3HPPhYNDN/+vNvRWSQJccloVLbIo5lpg44/SHwWhQKEzGFcEQAAgaJ1SVY62qWS9GLJ3GRuDgGnOAkAYCqQn+H0rd8iHYe3/hOAvxMc+PkT/8R+YLEEwOLW6hmwIm+fHOAUFgGBRdvvtjmPdrijDtLImPi+oca+MQBY8dKBJ6Y//GBiArAc9Y/O25uPY42ftAKIzN6YDEdn/0Xn7c2/fezcJ9cW+iDxVQEGg5VN0T3CWQdRM5qamiJXumNDMbJEmntdbj0+2KJvf4mcd1rBm1vf8fjGw+f2nPOG1tRBPyv6hQ/V1qV+VvQLF25n1Hfrk9sRxSXpjhzg5HgvSEy21ZDW0tCde7m5ucy1TCZzVjMhk8mcUs6yQb0ChBCfRHGA0dsXf+rMaKDv1iefT2SzhxRMddzuhjjf8YMcJyNnHcp3594iq0dcgEIBQgjxec6MBhLWFG+8fP70x+xO1pn5zz7m/J0GHYwYwjVB82ciS0ahAPFiju3zH6KIi08MZPvq80KnbrMfmfKzy/0BrJAq+H+zzD1f4KH2xsBUdFx8IvtHY7Z3qEcZFFssCbX6UkK8hhOjgbCsLc9mLb0Y4jPo7zLirRze579HqZtOZMb+H6i7QpOKk4KY9Ntjody2Pw8UcemJgUxMwC2Ssn6+QGj0CvWwfjaR2Rvg4fTwgxCFNBR2XkoIIb7tEU9XgBA7LPb5T5JJ2X3+uZ/7CJKGhmB2ltvGX5jCbu9jSldP6xAmZn/Bh4gU3Dp+5nyBlabzBdA/Pc08qJ2eZgrU66e0K8KkgfZfSoiXePviTxe9fJH4MwoFPG38m9O/Ptk07kDigjIsA7OpNEAAACAASURBVIIIcfzU4Pme9vM97ffu89K5ff6Zj3id9sCKoDm/02f1s/xzBIKkoaatdyzPF5id1QMCQZjowZT6IYBZ9fR9UWiowP5LCfEiHowGKArxXTRA4JXEj77wk0c9XQnPc2Sff2YcwamvDRSlhKm79LOJgunhByHR0iAALn8pIU7j5AUFC+Ho8gHiZahXgHi/EFlxUnpxlBBT02pAPa0TiZOKY3jnAtgTJAiCdtb09xM/v3EggE3nxiOkoULt9LRaP6XlRhYW+FJCPItGCsiCUK/Ako1/c/poq/zFTNWHF4cAADHb9r6Q0Xn6KHub9WLF42ls1qYTx+qZc0Pynn/1u6mWRXWc++2HTch7/tWN46ePtspf2ZULy8J5pZlqYCoWuaU/2Z4MdP+pqhamV2i/PnlibJOVN3ozh/f5t7qNv4k0VIiRwXuh6StDgPujt7m91W2dLwAAIaHxI4O3H/BSFvhSQgjxHRQKOMVA/ZXM3T+pEDGN7oVjv20tMt1+eC71J9uTmQZb9vyru1OBzi9//dGXcvNGffyb0x82sS39+Dc2C2dLMz3GKxbar0+eOPHN7t2PJstz8WF793dTkwFgvLt1IGtzquv/PTjVovb5tyZEVhwFdohhhVQRBiWTbuN8AQBAqCwM/VNCGZciXehLCfEwDw4TEJ9DoYBzZG1+lNmmXpSRGXNhQGp226odB9Cp6o8rLEkFAKQ+/pMKs+c135z+8CK27Z3zi39u4UxpnI4b9f25pbuZYiFavynrwke3Oh59PC09Cx91dmxPTgPGO1X9ueutleztFrvPP2BxjgBzlDBLlGjMZON8AWuvduilhHgTigaIgygUcIq4yEg7twAAzdgQZOvFVh8fqP9wAECWxOrH1krjaMdGgYHaXzfxE2PGxpGWumZb3AlV5+Npqdq21qG8TXSymL9gTii2fyzhMNALYBkeYEgsUDRAHEGhgFfIerEiVVVVe+WbNWmPWv+Rakd80e7dVp4SZWTGXGjv/q5Y64ujA2RxZoA7QPZ82XqBDGDB/1cjPomiATIvWkHgLpGSGIxqre8EEBcZieTvPp/Vf/Hc1wvbK0AkkaG/tdvqQ+JUeXxT59edqv7cVF8cHSAuwnQbhMyTaznTTw5cGNE5cYcopxdIiHtRKOAu4lR5/ED9tU4AwHjTiarf/qnTPEfqmm1xQxc+W9jGQWnrCuMH6uu+YfbRR8e535q2HhInZ8a1XLg4lJdOowM+QNeCGzD9o+XSZ2CWPsxL1JrnZ7oEANwxz8Z/lp+nm3vFPTbDsWNf+UVzJgiP2xYlXPK50j6E1hYS+7xogGC5HyAtzt29FyeO/fbXAKwvJhStf6qw9Vh93TfJJQsu9sSvLwIA4gpf2ZXLTTlg5zDKLV9EvI5+ovZ0p2nknmmwmT78O7zOfGaM33hK3CCwjktvA9YB2dwAAVOO1Wct8twDBMBKAHjhUc2FP04mrAunw+CWH98dJuA3Dcu9mfCYAIPB4Ok6sEZHR51VVFNTU+TKFGeV5sPGvzl9dGy92eJDr6O51/Xupbc8XQtP00+sHfh/fhX0pmX6jPm0Pv5UAH4zb5HONPP2n2XyaLkYAgBwbs/7P377fyA3QSqFu+knBxq1M9xdhLEO5unB8pi4xEDoJwca9WG5gqkm9iM2/5z0YHlMnPS+sQSzbPlMx8B99QX1BACskOQKpppmxdsiBWYZLPI/1N0YGtMx1QmN2RYpsMzg1VwaDWQGyJ2+22C4Jig3N5e5lslkzmomKKSw4EW9AsTptG2t2PaUN8cBhCWIqJ/97V7sPdZ0DDLA+N+MacuZBnsu++P99p9lMC3kDfbu2OwXE0Cw/qG7/2Zgm9KEOFPT26fOTZBK76sbtStyE+LYAyFH+lQT+sRIAQA8GOsSJGxLCGLSmzSh26ylq4Y6h0XWsjHuqy+oH8hjUhMDmeuZeXaKeKi7MTQWLk1dF8LW54aPdaL4bt8AcSmaK7BMjX9z+tdVJ1ozt9tYv0i8TejKpL1792IdMMoN7TNuAG1ANtf/vyCOPBsGrGP/2bt3b+q2hLhEj/xCCOSdQhket435+R4o3GbqogiSCoLx0HggZERKeND86TazAYBaP4FQ46mVQvl8O0iqJ8Z0oTGZbAgWlBgRodPq1Iv8woR4D+oVWKboQCPfxXTXG2cOhrED+QCwoJMPtA48GwxMzRlKcD9BuDi+b+jCNADES1O5tpY7EFLT2WQ8/GlFGHcx9xRKa+m2sgHArP4hhALjX4JBUkGwyl7/9qz+IfCArScnWP/QtzadpI4BMheFAoR4AfVY+230buVujev97vOa6hm7Xf0MpkW/z13M+6wICAM6uYih96vOCyMST4x5CzITUjPB9NJ39oMbhmcG8ldI8hOEAnYcwd01syAUWRkR8HSlFoqJBqx+RCGCf6JQgBAvIJWk5419cewYjPtGMtP6ggEZt/wP3OT/+3ZnCciANrATDhx5diW3mBA4NqvxSBzAEyLdliDFffUF9bQ6UgD9BL/pnZ6dYc+Sco4gQSB0sw8Bfvnz5dfr9eFBXj89cF5vX/zp3ERb8YEjaLGiT6NQgBDvIJXs3bH32PFjlunJvFmEMM32N10ACObd8vM78ixMgwh795S+ffHLhVbcCdSazibEGCf06R+aTqE0Nr36yYGmaScfCCkVREA93hshYKYNNnEHTAkCV+DBlPqhMDEQeKi7q51hBiakERLh0NjdSQETnag1nU0PJflRQmfWycMW3aI7fe0AcScKBQghAHBuzzmrvxTdQRqZmqvpvNDH3a9gOycEkTHxfUONfWNsonRFo9qpB0KGSLdJ1ReGOlUAVkjkoVBx6fmigUYmHRG50oimCQBAoHBdDG4M9V3QmtXT1wYI7KAW3T9RKEAI8QLSyNRtVs7d4uYQcLYlAADC47aF8zIZb22l28nGDEkAANSaMWFQoNVntxmHVQKF6xIsuwEsMhPiaygUINZp7nXZ+ZR2cCLLgbGHn9k7qGsa4VIf2iSAEGehUIDYVH3rn62ml6/5sZtrQohLSCMT5CN97ACE+TpGQvwJhQLuYP8Xti9y5BtRz4Fv2X58+7k952BjbvlyFZQYlZro6UoQn6SqKlRUNlimFhxS1lfYnXqpqipUnNxlP5eqrg4lJXLHMjsDhQJuYusXti9y8LuUw9HOgze3vsO/pSMJPMUYDRBCHGHZ8KuqChWKfZmGIws4Um4OtvkvKQEgr6g3VCy1lg6gUIC4yqKjnze3vkPRACHE98gr3iqvLD1Td6RkKbGAB9AZBIQQQogrqKoKAzj76ux/HhBQWKXihh0aKhXcbUBhlYr9H/PnmALne4VjKBQgXqf61j9bDBkQQhz0s6JfLGXTQLIkdftKq1G+g+kSUFUVKipzag0Gg8FgUB5qLuU35kxu0+cG5aGChsr36uQV9cpDBSg4pDTwhh7kz+wqaDh5lntcdfZkQ8GhN0rmf4WjaICAEEJ8nrH5Z/YIomjAPRoqFQGVZinltdxEgbr3KhvKa+vZkQJm6OC9uoojCi6rSvGGwWDW2leebFXB6tAC8+lZVUWFnI0Edh2To26f9VcsfHSCQgHijahjwCM8ueEgWRSLCMCINg10D9O0QVVVoaISh5TGZljV2gw0lAZUm+VvVcEYCsjlcgB1+wJKjXkKdtl6Ey8WMEYCqrM2XlGy4PUGFAoQL1V965/L1/z4Zxf+1tMVcZ+3t/3S01VwE/rN6gg7YZmtCIB4jLyivrYloNR8+YDVlYWmHnwmCig4pDRUcOsG7b3grfLKd86qKp7hIgGobL1i4SgUIIR4wMm2//B0Fbzarozvz02kCMCrlRypLa8uLd23w3CkBJBn5qCB69K3qu5MNb8hV7Y0ADZ7BQCU7CgvfedsHU42lL9VL4cjr3AYTRsk3qv61j/7zw9lQmxhZgL+rOgXk5GzzD+erhGxruSNQwWoLmUm8pe8caigoXIvN4+vbl9AwJxJfcapgKqqQuMwgTwzBw0tSivF7yhvqCytbODmJTr0CsdQKEC8GkUDxJ9RBOBj5BXHDhWgmpnIL6+oVx5CpYJZ6FfabNmVX3KktryB/VhxcpeytpyNAEp2lKO61MrawJId5YBxhQLmf4XDaICAEEK8ERMEeLoWxBbrGwGap1rLw0srOWIwHOF9ZDDMSS8xK8DyAZvVWCgKBYi3YzoG/Gr+ICFw+YSAvqu/PdcGAFHrSlO6a7uSdz+9Enf/dKIreffTK0UAAC3vVnv3Tyeuj3IPywqf/26ucODLf7+A7bsfZ06OxkTTp59oco23xIfQAAHxAQ4NE+gnBy+O6PRuqRD/dXYuCPFSfVd/e64ta/vuV3+w+9Vcba2pjbeZ/8R1UekPdr/6g92v/uDZwqjR+pYBIC5VgZaeATaPrl81kpFKcYBPolCAkKURhMcWMQfeE+IjunvaoNjG/nxP2FSqmCe/NmL1qz/YlMzeRSSnyDCu0wLJSRlQ9nQzefq6hxRJybYLIV6MBgiIb6BhAkKcZUI7jpiUcOO9SCTDuL0HRMIIAN1XTtQa57VHJQNAwurCqE86+zYlJ0x0d41m5ca5qsrEtSgUIMuLeryrbRoAhML4teFBbOpD3c1hjY65Do0uEgsA6CcHrz4MzZjVtM0CodGbArVX9aG5gukm3QwAIDw3XioB2JxsIoDgjOjYRN4fHP3k4FV96KYoofUK8V4dJ0nJDHHidyXEXZiJBVHrdv+AmzfQxXwQkZwiq+8ZeDxCpxrJWO93owPs4UEsJ2334wnODgUaD5a9ex4AUPxmzYF8AEDfqYr973dwOUzphCyIAx0Ds5oRQXxRfBAe6m4O97cGpmSGsI1xmCRlbQiA2d6R/puTXJQwrZmWpBSFAIB+UotZTRfzOGZ7R/qbxkOLxALcV1/VBeXGx0rAPt42qU8UOzYgwH/1Q93N4a5WigaI50WIxBjSTgIRzL1WOwrY69rv7mmL2fDsC6ut5BclJMdc72kSaYcUOX42OsCdBcSdAVC3L0AR0FJrWMQRAB7n1FCg71TFu3izpiafaf4PNjKNfm9PB7X/xCnmjQbCU5g2PlC4Sjh9dUKXFCLUT2p0odFr2QY4KDEivG1MNxYuFQBAuCzE2uMIkgqC2/SzeggQKCyK53oX+OkOGOO/OlCYEqppuq/PDLHz7Lk95xwp2HVoS2C/kJy1LuajC18m7X48Aei7WqsEogBAJBRhpLtbtzJXCOjunbs+yg4EAENd/drVbJeAMT8ACOPlUTfqryNru5+NDqjOnuSdBQRut8F3qt4o8b2uAaeGAgk7q2q4y8e2pr3f0HggPx99PZ1pSfZ2UyTEWUJDJdylIDAIs7N6zE7PArPDF6f5+YKnH0IAICjIrFm2uDWWA4yNdzUZSwgKdbxGwkDTnzFBYDD0s3oIbMcCf3/+dcfL9l3/UPwrT1fBzwlXvvA8Tn904rcAkFG4QVbPdPgnbNq94U8nPjpRDwAZpdszapsAIHnztqx/v3Di328AQNS63dtFJ85ptYAIYMcIRkR+uXag2fzsn5Ij3M4AgNnoQTm/r8BauqqqUNGy61BzZWUDl8offCh3dV+Dq+YK9H11qaN4Tz4A9PZ0dJzfX/Y+gDnDAxs2bDBeX79+3UWVIcvJYuYPms0b4Di62O+++uLYJIIiN8ULBezMgAW8mhAvJVz5wg9WMpfau3+q55JFq7/76mpTrlfZBj7u8R/sfpz39Ks/MC/NhWsHZDKZ1WtPY84EVgRUWp0jwB89qNsXwJ1MYJauqipUBOwztvLVlS21BkPJnMehqipUFFa5dB6CC0IBdmpA2suH8wGgr6cTaS8frtqZwHxWcSqRuQbMm//R0fmWthICwF40MGv6za1/OIugUAGCEASdXq8Pt/KL3xFj9yf5kYT+4QywgF4B/qv1D2cQJKJlh2R5mejuQmGB60YHjE2DTCZzVjPhnJCi5IjBcERVVaioVARUAuD/yj97sqHg0LESYz72kbr3Kk2jCkwwcabuSAlzb9pR2Cwbm++9ugrX9Qy4YF+BhJ1VNTU1NXt69lec6mNujW1/QlJqR0+v89/pj6bH2j/tUk/zLhb64DI0q/l2chYAHuq+1c3ERQgFgCQ8UmhMB8bGuxa6/49Or2fy6ycHmxbyL455dc99MFXqmkacvYkChPgY7d0//fbfP1GlbM61sYDGD8gr6g2s2vLqUvY8IGVLA3Iyrf6KL8gybeOgyCpAc6vK8gNVazNQXRpgVFoNUz5XcN1iwvyC4ncbegEPjR9p7nV55sVuEypJf1oCAMuzUWeVr/mxrY+sdQwERUY97L/YD/BX7gUK10bj5nD/RR2bZ1OUUODwAIFEHB3XP3y1X8M+Kwm6Ojarh2PzBtlXd12EeZVssjWI7idzCAhjV8b33Xr6gMWggBseXJ5KjigPNStOnlVVLP1QADevTHRqKNB4sOx4EjsUgMaG82lJuywS+3o6iwsOOPOdtlTf+md3vIa4np3/lGbRgCA8tigcgDBRPCdjoHBtvOXPFi7/vLeCzPiUTN6DRfEAAGMGOxc2Xm2DrQkQdDYj8XXhGsu5Oj5PVVWoOLnLVnOtyCrASfM5hZyGk2dVFexTypYG5LwlB8x/8Mszc8yyuZ5TQ4H8A4d7KrgJgtz8gATLRFpUuHAP1FfaB5jdwJISc7LDAWB6rP3LCdHjKVImy8hg891xABBHKzZLgu08yDc91v7lsLFbIXR1enrKChd+D0I8Yqj7eiMUZckiWxmmRr79QhP5RGZMmDur5V9WpEjmzzTHg64xp9fEOdhZg4UwRQOqqr2VDeW19XIAz+wqqKxkh/e5OYBHSlDyxqEChSn9nWqU11qZAMBk21v1DFN23b6lHEDsCCcPECTsrKrZ6VAicdgD9ZX2gYjEnM3hwGT/p7390avioyzy6AcGIhRPrwrGA/WVduWdFTnZ4eYPPlBfaW++YxENTPZ/ORyyflV6FADMdHUp745NpMRGuO+rLRXtRkwI8ZSSIwZlVqGCmzIIoOCQ0sA21/KKeiUKFQEBAPiLAW2lW2CzcWW7fLSANh72etOT2nFBXB7b8xz/9CqruSQZTE/ACmletPZLtTotXDo1NjAuTtnMPLhCmiEe+HpyIjvc1NJPr5A+vYrrP0BwVETo3YkH0wuaH+95Lo0GnNszTyELIcuMvKLeYHNegK0PraVbSbNbtrNRKOD1ph5MIzhqnuZZHGHsJwhdEQL9zBSTvMLU3R+2IhQTD/hzDENXBAMYGWz+2ngSicBmD6r/eXvbL50448TO/EdiTtdV0zYCAGFJ+ZGaRn1cWbLIogOffzs18u0XvZPcw+E5WavSgy3LyeHN1rSZf07J/FuMfPuFJjInpKdZDQCRiTlbo7hCZ4YutfRomGupvWEIQrwVhQL+bLL/094xCOIeXyUNZScfeLpKi8F0DLii2EU/a7Xhp9l/DtB11bTpc7I2pAcz15OQzpP/i15B/tpVMQBwv721uXlIm54smlMO2HJs5XfEVE9ziKJsrQgzQ5damm8Fb1gjZOMAYcaGrUK2wEsjvCjBvyzDuYF+g0IBr2f8NW+vY2DGlGH6wX0IRGHAFDA+MTktCWbSjb0Lxo6Bkckx/hzDqQfT7EaivscLF4zQ8r/FGBofgVTB/kwXxuSEjTTbzT8VHFO21tjuhsREhjdr7k9BNGmjHFv5HatdVD4TNATHrEvUfDE4JBfGTA71aKSKrewakZD02KjmtqGhqJQYR7/xMrO4uYHE4ygU8Hqh4SLx8EDHpJQ/E9ByLYB+4PZY+GZJMB6obw9PJyWmhwKhkjhxu+nBtnEkJVpOCTTGCtNj7V+PO7hYnhAXuT91H5GRxv76kJjI8Ga7+z+EBYeAWSCgNiZF2inHRn7HhIUY/9iFBQswdX8S96fuA1PKGjU/X/jUDBA893lCvBaFAt5vhXRzOq60N38KwMaaQAji4h4oP/3WPMN8D0bFpiR92/XltwNMCY8nhnzZOzPlY9MGiX9jJgSEJT2xlps3oHFqfgeYzRsgxHlUVYWKlresrDGo2xdQWg2LhQVWEx1FoYBPWCHdvMpyyNS42yDYC2lK7AIfRET2qpxs3kc2licQ4h4hYSHQ6GcAtmWd1E/af2BofITfEk/qJ4FIO+XYyO+YqfuTADudcEYPaVwMQoZCoNFop6JCaEMC4lxsy14+5wNVVWEpag0G5uzCfZkGduuCuYkLQKEAIcRrxIij0DbQHiNipvs1qtnpfmHBAkxphmZi0oOBmaEbvZPGjn1jSzw18m2jmm2rY8RRaFPeEm9YIzQrx1Z+IzsvAkYau8VlySImPSVDBCAmJimypefGiIgJL4a6rzfeT5qzVdGujO878u1Ptv3Hov6tkeWmbl9AaXXBodpDJ0tb5nyobGlgzy2SP7OroJI5zchq4gJQKECWL+OGjM4a8nB6gcSSMKUso6um5XozgLCkHCmaufQnEr/9gklHVH5GVOMgAMQkK1JuKr+42QMAYUlPZAi+aLs/CYQJU8oyUNN2vcu8HFv5w3kVsPoiJn8OlDU3ASAlY8MaZqpgcMzWLFxqaa7pZfPY2LKwL3ho3i/vYMTgcbRSwNVKjhgMRwBV1cm5n6lamwuy3mCu5Zk5zPbGsJa4kEECCgWI9ypf82PvWhrAG1shS/H351//h+Jf2fgRLEwpW5vCXA5190QK2Al4YVGryni7bJaxk/ZFa9ZuWMN7umytlXKAmHTYzc8r3OqLmI06YpI3pCfPqXBwzNa1TlkxYAwXEma8fQUCrRQI+FHA0gsx/M4wfyYLypYGZDmUuBAUChBCvIZZB/vMUKsawgxfn5G3K+P7jnQJEN8SGPCIZ16syCpwMHEhKBQgPuSB+kq7Ns50ZtJMV5fybnDK07ER85+rxDuZCeKUp2MjwHX4r4/Qfs0+K1lvPN/B7hFQoXSSk2vEJOfktDazHfj8fnjiLcI1QdQlACAowEOtpzwzp+GMEpADULU2I2eHHIDVxAWgUID4kBXhcYKBgcmZFGZbpAeTA/rQ1XER85+rxD+ZCTNdXcorY9zeSvqBNuYkJ8x0dSm/Hox4OjZi/iOgfP4kJ68Vkp65IX3+bO5mMWpA/F5QwHc89GZFVkH1O1VvlFTIVWdPNpS/VWIzcQEoFCC+hDkzidsWaVI7LhDlrcA0rJ+rZDTCP5kJwSlSyd1e9YgkPgwwneTEf3C+I6DcdpKTfkaPYAHt/OT1fGXGnwWaALhogY+4NxQw7TEgr6ivbQlQBFQyWwgYDzycm7gAFAoQnxIaLhIPa0ceSFNWzIxMTIsjEkIBzHOu0sz0DKDv+nTcrKTpBwgDIAieO9973iOg3HOSk35q6Ko+dBPtW+cbfHRCAPX2L06gG3oF5BX1BmvX3AoDc1YTHUWhAPEtK6QZ4oG2yZmU8MkBfWhcXDDg0LlK/NMWjKYtczlsmZzkRAhZnO94bIDAJSgUIL4mKlzytXpyBNpxcdTmFcD85yoFhwabncw0r3mPgHLDSU76qaGruhlg5urAdEZUTGIg8HDi5ohGBwCIkyRnBnPZHoZmzGraZoHQqE2BOv5tkUjAlcMIZopi+htyBdNN7EfhuXES9sehtbdYpDMlO/f7EuJTKBQgxLPCI5J6u77Wm52uZP9cpShJnLidO7GJ6difiXs8xebxt44cAeXqk5wEYTGbMHRVH7pJFiEA2xKHSZLXBjPX3a3GdnpaMy1JLmIjAx3/FjNjV3VBuXExEgCY7R0daJvSJzKt+KymSxBXFBfEpDdpBUUigdlbZsYujo3JmBCBn47Z3tGBm1Nxa8NonJn4re94ajGha1AoQHxPRLQYPeOSaK5ttnWukmkSAHsyk/LTYbB5mAWBtt7gfSc5jU1pdKFRa5kGPjAiJVTTdF+fGcwEIOEys6EP063+OxFFccYGO0gqCG7TP+SO+gtPYdtyXvrMtC4okp0QGSwpirP2dgQlRoS3jU2MhUm8eJTZR+fxGTllQt9k5KyrX+G3vuPmaYMuRqEA8UFRsTlPm529ZONcJf7mgPOczDTndvEnOZWv+bHjX2UBhIGmP66CwGAYG/WgILMuCd6tIDAIwJi2u8kY9QSFzs1mpH84gyDhnPTZ6VlgduSiWegUPP0QksX8BfIPxb9axFOL4KPz+LDAmifMxASnyqx/1jlq50GaMLgU1Cvg81z1N7UneNe+vITz9+df93QVGDNjF8cmERS5KS5CwC5JWGRJQqETRwTo3B33sBUizHSOLjAO0N45eaJxAACQW/pX25MBYPz2J8fa0va+kC2G2S1uf3JsPK1I3XhxCMh6aq/4G97tytyWe+BKAHTfnD41tt5460MCKBTwCXbae9nqDHfWxKXKsXzCGqvcH7d5b3Sl09/Xh7E/5Y0/3+237GP3J/lNuP7hjP1BDGNng3nHQFBokNnbiX/R3jl5olFW+le7koHu+qra+vRXC1PtP9LSOFb6VxVsxPAN/7YT9z7q7N2enAgA2p7WoZWbfC8OAE0b9BXLqb23w6Vfc/Ru2/mRz11Xvndigg+vCAgEgUGYnWUaZklYpHBE0zMTkRkMPJzomkacxKF22diE66eGmqYBuz/sBcGhQp3pLcxUwcxg9u3fToUwUcWYtrtpNpKdz0iWu/GujoGY/KeYBju5sOJVRx5aaX5uk+k2NXUlars6H09MZUrOejTVmZV1m0cCnHAckfdYtqEAIYvDRD/G3giPxgTBgjiMNA1MxkmSM4Mj1kbh5kj3RQAWy/xsk4ii4gZGrg5oACAocpMk6OrY7Jwf/TyBNt7Cpg9cZFYTBlEc4EfGx4chfVS8oGdixGJbt8m5RTGn2rsLU5N1nW3DuesTnVNLd6Npg4Qsf8bukMXFBBYz4xY9dUCQGZecabwLjFgbZ3nMgSAspijM5q1lCQC7KMDOU9beYi+dkIURpmZEX+zs3S7Szjc68KBrLDc3120VW5BHaK6Ai8hkkksBYwAAIABJREFUNibBEuI5FjGBIwGBRZ7lNE3VV9C5wM4kFkejTTuOxIV1DNgpMCUtrqHrG7HGgdEBi3bBe5oJCgVcZXTU3roXQjzLmwYOCHEjcUpaXEPjje7s7cmmKYTbkyEWR2Koo1Ob/agI0N75rGEYMWkOlShKyoxpvNiA3NJ5Rwf47YJMJnNWM7H0kOKRRygUIMRfLaKTgBAfJ8retRsnT/yfKgC8xYRILtxb8MmxE//nIgCsfL505UdfO1iiMDUj+uJQZLpPrh1gUK8AIcTRToLyNT/2mj0GCAEWs6kAAFH2rlez5yaL856tyDPdMssFYZ5okcckKyV1gbXwJhQKEEJYS5xdSIh/0nW2oWi7j64dYNC+AoQQSzRwQIhDxm9/cqxhOK5g5y4nn+XpZgG0rwAhxBaLgQNCiBmb4wU+hqYNEkLmYewkKI560rM1IYvRe+PDP6LglXWxtjLolBc/6E14qVgudGe1iBehAQJCCCHEr9EAASGEEOLXHqGNhwkhZNkZvHn0cgcASPM282e0Tao+/vT2MHOdbjZq0HPjwyvtABC95qnnFOFMok558YNbai6LdPPTRdnhluWs3PLiFq4Ym/mJV3sE1CtACCFLsCvj+56ugoXBm0cv6zY//WJ2OHMNpANg2+/ILS8+Fwtg8s75zz5Wcq2++nZ74lOv7AzHpOrjTz+7HPHillhg8OYHt4R/trMoEWz+K62D2etizcoZvHn08s3UnWsTYTs/8XYunjZYty+gtBpAwSFlfYWc94GqqlBR2cDPWl5rOFJikc6kLQCFAoQQd7v78FuXlr86cNXCHujt70B6AftzPFaxWdpxhUlvvT2cXvAc2zSHZ69Ou3JZ2atYKwSAtLVMTBAuL1rT98FdVV6sHOGKV3Yaf9SHJyVKr/RO6gAM9A1L84qYcmLXvrKTzaGzkd/FsxEfdI259gV+4BEXThtUVRWWotZgYBr4fZn8Zl1eUW+o4G7q9gW8k/VGCQAoWxoW3P7zUChACPF3k1otohPNm+QJNh3qhqPt/MxS7SSEANLjjFvkCCOEUE/ogMTwcDALEIyPSBMA6CbUEK2c28ALbeR3peBUbznRZ14znd57MM0jLpw2qGxpKN9RAgDyZ3YVVJ6pO1JirYmv21fafEh5RA4Aqtbmgqw3Fv9KCgUIIcQ2/jwAI52t3MyEA2neSzvlQnbNod3SF5qfeIuPf/q58fr5X/6Zg0999Ld/nD8Tv1mXZ+bgZKsKJfI5uareqS5/y8CmK1saGqoVAZUAFjE84FgoULcvoBQWRVtLI4QQXxQuEmF4YhLgpv5NqE3pvYM6hbX9A7SmnnzdhA7SBCHQ299hNoVwQg0kABBGSGGt599WfuL1drz3tPHa8YWF/KcAnHnjUyuZlC0NyJqvpLr3KnFIybXAqtZm07QCVVVhYZXCfIrBfKhXgNhTHPWkcbcc4gr/UPyrRT+70IOOlvKuZS4xPg2XGy7Hs1P//tjOThtMzMyL/vT2RWUs01r33vjwj9q8l4rlAKDm0idVF2+pV24pEgI6mEIHnfLiH9sBKQAI4xKib92+PSjfEmuaisgsIrCan3g9Fx5HpMgqmDdP3Znqgl1KY2NvNoNAnpnTcEYJOCsUMJuRWBpQbfFxeS11CSxvstUZo3fbPF0Ln2e/AV5KpLXQpt3Vk/V8WezaV7bg6OUP7wGQ5m1OBzNtEOHy557Gx59+dvQWAECax+wwqAMgzUuf+OzoKYC3ODBxXcHKUw0fnLrNZt4i/ODyhA4QsuV8eBSO5XfndyeL4cLdBvlNuaq1GTk75jTqFpHA0gUYDIb58rhpMGB01GkzRJqammSrM5xVmj8bvdtGvQK+qDjqSX9u+FcHruoLHvJ0LdwkYSbGh2YCLshM52hubq7xViaTOauZkMmW+m9s1z+VLb0aJ//fGmvJqqpCxcldyvoKuaqqUNHy1pzWV1VVuBfHeEMAdfsC3snilh2qqgrfy6x3/mLCkiPzhwuEEEKIv3DlboPyivralgBFQCWzr0AJwIQHxqBgzmyCkiPK1kJu1qDxmQVwbK7A3E0NgEXNUiSEEJe7+/Db1fCjjgHifq5cTAjmF/gRfoK8ot7A/9Sy7TWbLbBwjkx8UFXtrcQhpcGgPFSA8lqDwVBbDpTXUhxACCHEHz0S8MjS//H0lzBxpCrKlgbkZMqZFY7NrSqg5EhtefU7VSqXV48QQgjxOo888p2l/+PpL2GysKhEkVXQ0KJkb0xXhBBCiB8JcAZPfwkTR0KBkh3lqD5TB6ZboPpMHbufQZbC1bUjhBBCvM8jAd9Z+j+e/hImDk0bLDmiPFSoKKxS1lccqS0PKA2oBgoOKRe0lxEhhBCyTLh42qC7ObjboGly4px5jYQQQoh/8apJf0u3rL4MIYQQHzB+++Oq03fGmevu3nEPV2cRltm0QTu9AnX7AkotNxs2Q/sKEEK8V8JMjK2PvHbLATt1tsPOYb7evhHh+O2Pj7Wl701OnD+rd/GqSX9LZycUoKEAQogPGwnTWk2PmhK5uSYLYqvai+Dl39SnedWkv6Vz9smEjQfL3j0PACh+s+ZAvtlnfacq9vfssUwlhBDifLp7tf/xfzPLHl75chDI+rOKokRo75w8fmUAAJDzzCtPJHNZbaSP3/74WP0wl2nl8/u3pM7Jzyu5XbHnubVs8KG7efqDLyWWL2Uzw1T+R/XDwPCxw+2Pm571CY88sqyG150aCvSdqngXb9bU5DPN/sFGfrPfd+qX73eg2JnvI8vaZN/NunYddxe3dWtmLHOp7z13vY05Tz49u2i9hMuykPTJvpt101GPTrd9owNic0tCu/i3LykkNksjxIe0Xhl76ZUKpmnX3jl5/Ir0mVd2JTPXR79gWn0b6WzX/f7nxACYsODw5ef3b0nl54fu5ukPTt5+aVdekiL2irJLtzZPCADaHuVg9OPbE2E9M3vyojjvub34+Fhb+t4XssWe+NezBMtsBYFT45qEnVVc45/w2Na08w2Nxo/6Tv3yUmpxmjPfRpazyb6bdaNRJVuLXtpa9NLWopL0qUuXWgfBtuui7KKXtha9tCFDe+fi12OARXp2XPud1kHMSefnBzDYpksqemlr0UsKieWtnacI8SUrM7if+J3fXBnI+jP2F78oe1MWmjt67aQDgERkbKHFec9V7N+SapEfwrXrVw7U3+6EMC0jeqCth50J2NU+EJueJrKVeRnwx30FFqHvq0sdxXu4PoG+U7+8tPVv/xa/PN9jnm3Dhg3G6+vXr7uoMsQ3hYaGc5fhCWtfSgCAwd42dWzuduY3uiAxK7btknpsvUQyOTaiFmZsYtIlmS9tZR+0lR8AEJdg9lvfdGv3KbIMLG52ng+KiuT/2o6LFBqvxZHRaNOOI9FWujhvbc7hP1a1AGajBjrNGDDIpnOiNVqkpqTH1bd3aLPXinQdbcNxGUVi6DpsZHa4D8DiNOGlHy7sLP4zbXCx+k5V7H+/A2kvH87nEn55aevfViXg1Jy8/ObfWQdReylNRzfSkiM9XQ1fEZ6Qkn6p6YNBYE7/vDRUYMoWKsTo9CQkk9M6hKaEzynHVn4AEIaa5Te/tfqU1fKJr3HivLzlLfGJ/a88AaD7ctXZo81gRvqFAOIKTZ38PNmbsq5c7dKtTelRDkYrtgsBna3MDq8e5LcLMpnMWc3E0kMKr1oKuHQumPiQsLOqpqamZk/P/opTfVwgsDPB+S/yIZqbp49e9cGls54kWb/V2Nt/8YNLFz9QUh89IUti7MAHMK4ZNvb/20pnJW+p2P9KxTMr0dLZCWGkxCw/X2rayoG2ns6u9oGstWtFgN3MPs4PTyZcnPyC4o6eXvR9damj4/39ZWVlZfvf78D5d8sqTvW57KVk+ZFkMgEBBkeZ4X/1qHqS+3ByWseMI4SHCjE9PWmtAKv557W4pwjxWqmPbo4bvPJ1NwBAe+dqC3LSEu2kd148WnWx1/j4+LgGsZFiLv9nt9kpvZ0Xjxo3C0Jyas7glY/qh5kSYD8zAEAsjsSgxgdjhYCAR5b+j6e/hIlTBwgaD5YdTzpcxfQANDacT0vahYT8qpqdzMfLbDHh+O3jv6/vBwDk7dj/FDclUnPz9NELg1ym2OK/fCG9g0kZPHqwjb1VZxSr68/3A7nPvP5kstWiNDdPH23N+PPMtj+wpWX9+YEi/5l3Oai8eAm57IQ+YFI/BWFUOBCemCG93nZvLHG9BND3tgwiPVsCIFwSJW03pTOT/tZLEGsjv32Le4oQrybK3rUHJ48frQLAH/63kZ5a9MrzF49WHeYej93MzvNn839QVW+eDgCJGVlobjHNVbSV2dT2J6fm4I8fHb5ntrjRB3jVb/qlCzAYDE4sjp0nAABpL3NBAf9DO6GAE+cKNDU1yVZnOKs0a8ZvH/99vYxptjsu/uoM2Haafw3t1/91/Lz0mdefTGba9Ve+lxfJxQqm6IFfFO+ayRa/bc+etSJ+Ua78VnON3m07P/K5e9/JGVRevGSMqYQZJWsS2d/lzlpMOBplLNPi1l5pvqE46sm7D7/1dC08aXXgKpoTEDUl8vbdBu2a6RzNzc013nrVXIG/O/H/Lb0aP9/9j0svxCmcPG0wYaexD8D6h859ncdoOtr64wtLmLY8rej1A1x65KOvHzBukyFKz4w93zquwdz2O0vB/cDvuF7fn/vMHuZWnPdYbv0f2rqfSmMeyXqM3XTDVJT/TDyMVRS9ZPUcbEHi9q3WtildSLpxSYLVW3ulEUIIbTFEAIyrByFdP7dVjhSLAHR8fvgPTVxSvLXeiXizFT7xUtMmW2JpLIzRg3k2Qggh3mGZDRAsqy/jBTou/urg4T+oC185sP/1A/tf2Rbr6QoRQghxOhdPG6zbFxAQEBAQUFilmvOZqqowwGRfnQOPzItCgUURS2OhHtfMSe9oa4nftuf17+UxHQbj6sE5Wazob+0yFjWuHoRU7D+jAIQQ4oMecQYbZauqCktRazAYDMpdJxXGtp6jbGkorzVwmPOB53lk/q+z0AcIAESmZcT3119jJkiO3z5+8PBnHexHxnZdc/O0cZggUixBv/UFM2kbCvlFfdWEvAxfmkdLCCH+x5X7CihbGsp3lACA/JldBdVnzBt2VWtzQZblNCr7j8yP5gosjjhvz1/i+O8P/woAbwVg2pPP5B08e/RgPQDEF76yQ3L0jGYciExLy8PZPxxsyduxf6NjRXmN4qgnPbaIgNhVHPWkp6tAvN1Mp9mUe59eUOBV/ueLPzNev3v6fzn41Jsv/M/5M6lamwuy3mCu5Zk5ONmqQonc+LGypaGhWhFQCQAorzUcKZn3kflRKLBo4rw9B/LmpCY/dWD/U7x7bnEBP/2F19fOX1TkWrNsFrfuIludMXq3zf3vJQ7y8xWDxL65yymjOi3zUHCwOP/7o58brx3fhJj/FID/8fzfWcmkbGlAls0iVK3NKDikrK+QA1BVFRZWKeor7D/iABog+P/bu/ugqK48b+BfMlO1z1QUunkxvIjQvIm8asBgQEbRGIOOTCbB+JLoZseoy8ZatFKamTLz18baJ7EsZctZFk0yWU1iDCRxOqPEGN8GQRlAkTcRkEZbwESkQZNKTe2z1c8f93bTQAPdcLvv7b7fT/FH9+lzD6ftkvPrc37nXCKyeGSoOlpleGTzQPKWSVb3Hx+0/ZG7Ox7MRwr2m45NyBznF8cUVpqFOABATFxSVUv7RJc4gKEAEY0yXZe5IVM3Xe5uECmVC3MFLOM7IMwBJMVNONU/iUtGvB3nqhMREameKzcTxiZkHnq7qANAx8nPLOmAFuVbbbYLdrQ1CS+Pe4kDmCtARKM8MlSd6A15PlMHQ9WJ3pAlIb3nWoSdMbOWrEwWD2b80fD1hZb7AIDY+SsXzLBcPFa5Tcv2GyTyGK48YiimsPJUi0+sz3Yg80B7pWW3YGzLW+aS3NyS9rYsS9ag9WV7lziDoQCRR3LjXQZMLY0hizesfBz48UbVhXONT2xIniGM95r5K5+bAXzfeLSmMVwY0W3LfzR8feHklVHRgP0GiTyJ46mCk5JbYjaX2BbEFFaabR4WOnCJM7hAQEQTmJWsexwA8PjMEC0e/fgIePR9731tQqIwgs9I3mD5Zt/d2XJ/1nxx7H9clzwL7d9970iDRB5FguWBsdIG5cBZASIan3aa76iyhz+YMD3Gbl5h0LTHrY99p2nRO2qkt9cgkUd5zMelswLuxlCAiIgUZ8QdipXGy+5M6FVvhojcxHfamBP793u/t5Y//MGE6Y9zUyJ5HRffjsjdOCtA5CZedU7w9BkhQS0tzd/rFswYShVcMANhUQlBF4bKG+8gdj5TApVsxMnEE+LphAIvu0kxQwEi9/Gic4If1z23GF9fOHkUgO2mwbHKSYmcPXAw6Ec/F/XE43hZKOBjNpsnruUWfX3OBafjaGxsDJwTLVVrKtd34xZvRyQJN27/I8z5eTwP1pVc0I9+bpsVGJ0rEBgYKNUwERg41Xfx3oUPpt6N1xb/duqNSIKzAkRERM7hDgIiIiJVG/NmQp6JoQAREZFzXHzaoLsxFCAiUqPJ5QA6u+MAXrrpQFFbAaeOoQARkUrNmpvqht9yp/66G36Lm3nZDgKGAkRE5EKTCzgUHkB42WmDDAWIiIicw1kBV5n6Rk8iIvIaowcF5QwT3EzoKhIeMURERJ5uxKCgqCOGuJmQPEDfjVsStuZVh+cTERD0o597cga9FTcTkmf435B/kLsLNMzPev8udxeISBrMFSAiIlI1LwsFvOrNEBFN1cOb5w5/2/5Q7m6Qsj3m89jUf+R+E0MU1BUiIknwtoTkaj4+j039Z+zmy7f6+Pj4+PhkFXWMfrGjKMtHtLV8dJltsaMYChARETnnMSmM0XZHUdYKnDKbzeb2lz6LHTmsl2+N/eyldrPZbDa3H2haIQYL7S1VW06ZLUpynXw7zBUgcp85P4+XuwtjuvH/WuXugvs9atefrP8OADBn0eqFIUOv3KkpvSxuw4l6bm1aOADg4c1zx689sFQJeHrlkiS0608ao1YuSZouFP7Q9G35Zb/szfODbRtHdPbm+cGw08hQ4+4yuVsP0AiuPFegvaVqy/O5ABCz8qXM7SfKS3KHhvbyE4e2vGWOAQDEFL61ZfuJdiCmo60pM2Hn5H8lQwEiN/nfkH/4We/ff6ELkrsjdvxkuC93F9zvUbv+ZL3/otV5IUBv3eGLdRHWUbmvvjM8d/PaacLQ/nVN2Ob5weitO37N77m1S8IBcchvvZc0PyQqsL6z54ek2dMA4FFvZ1/A0xnBwxrHD03flutv5ubNnvbw5rnjxvA1a5f4AhDCgk/r3B4NcBvh1D2XtMj6+HRzhYNXLU/MnriS7bAeE5eEz9o6kBtjeTW3xDwsLhCqtrdUVR2K9dkOANhyyulpAYYCRKRKD3uM3wXOXSzMBISkbV5r+2LUPGFox7RZ4QGXjY8eIhjTZm9eO81SYah8VnjAZWPvw9mxvmKb4Yunw1hT/110dp44zTAtKTHq8sWbxtlpfgD8pvtaWvGdvWTzbJe/U3KBMzcqrY8dvx+B7VUAls3JslOpvaUKCQ401lGUtaLpQHtJDNDR1oTMA+2VhTFCeVZRrPDYUQwFiAi/0AXNMahsjWDw4QP4JfjafS3Qd/Qkuu/0aQCMNaVfW8/vCgwH4Bsa/sQ1451HsUnTf7hjfPBE+FO++OHOINBXcXjYSV8Bg48QPjthzqdi+YglCfIoP3PdAkFsQubElcq3+qxosgz+iCmsNBdaXoqJS6o60Q4wFCAiklpv3eGLnQicu2ZtrK8wt28EAEyPnRddf63nh6TQ3s6+gKiMacAPAJ6Yl5s3e9qoVoIXrl29UGyt9AaGpRGQ53DhwcO2Q3lHWxOSnh8xqHcUZcVuTzplrnQ2OXBsDAWISOSGrEYFTTz4+QbA+Oghgu1PDIxivNtpO7oPPnwAiEv84TOjvm7uNcL4XXRC3nQA0/z88J1l1cC+kLTNa9PQW3f4YrdxfrB7cwVo6lx58HBsQuaht4t25hbGdJz8rGrLW8NGfEscMCwboHyrz9sJlimCjramLc+XOPcrGQoQEQC4IZ9RWcmJvqHhT1yrb+iNXRgylEI4/oy9dXR/ePPc17cA6y1tQsLmXKz4ug9zFonf78Pj5z5xsv7CzRAhdDDWlH49OHfNM7GDNaVfw2Y3wcNBBIYzo98DjXsqwBTFFFaeavGJ9dkOZB5oF777dxRlxba8ZS6JPflZFVC1wueQpfaWU+aS3JL2tixL1qD1GicwFCAidZoem7cS+pOlhwE4sHIfPj97zqcVxz+tB4DAuWsW+R2/+HAQ8AWA4Iho3LgVFWFtQWy8/PA1iPWfifUFfOevfq6m9PCnlmqWcvI0Lj4rMLfEbB72xT6msNIMALDNChjxur1yB/mYzebJXy0pCW9S3NjYGDgnWqrWPFHfjVu8HZECKXYzoXv8ZLjvngUCnjY4Dk+5J+Gd+uvJycm2JYq6SXGVoXHq3cjUJU9cyS04K0BEROScx1yXNigHhgJERETOceVpgzLw2lCg78atiSt5EZUviBARuZMLNxPKwWtDgdCURLm74FY9Dc0jSn7W+3cHr5Uzq2CwufxoZ+SGVXOYRE1EnsOVmwll4LWhgNpMLvTpaWiWObvQLzF3m7qCNiLyAlwgICIij+Qp2weUj2mDRJMy2Fx+9Ir1iJm4VZsWRIxYIHh44/PSml7h9dlLty0ME68yRWabaiq+B2Yv3aBtsH26bWHY8GaDslfnpnKbNhG5FhcIyHuEpiS6aY1AHPI35fpZn75/ZdWmBRprjYc3Pi+t8V++8cWZAB5d/+rLz5t/82LidAC4WdO/fOO2mcKFDbZPcffK0SvaVZtyIyBeVdHQnbowzOXvhyTghnOOiVzElacNyoChALmNduhub9YUAesxMLcbanpnL31RGOAxPXVeXMXp5tuJQqwQFzXTtqGhp4O+ids2TbeUT4+MCqrofDiIMCYhKpXt8M9TgMhzufi0QXdjKEBu4ZeYkvj+2YM3ASBx+cacmSNefzRgAr4XK1gEDTyEBsAMP41tsc1TP9/pAG5fOvKV9cIZkVL3nSTE4Z+8AxcIiCYjLGfTxhwAd68cPH2kGUPZAFYhCywrAjYmGDjuXjl4ug0z5m/YNMdPXIaQtNdERHYwbZBoKmYu2LZpAe5eOXjaeHthmOX7/XSNFr2ddwcTnTtg4HZXm20AMWC6D0RK218iolG8bDOhV612kHLdvnTk4KVu69PBQdOIaf+IlPkh39d82/xoqP5XNxyZS+7tvCtUG2wu/+rmBJVl5fihT0SkcD4+j039R+43MUTqWYHq/Xl7zgMAcnbrd2SMU0iqErFw46pLRw6+b3k+Y76wgXBosPed8+JqfF765cErY1Sw3+zSxPfPHn2/Rrxkufbo6cEBQElpg9YIICA+6kEr1y+IvMFjjyloIJ86SW9S3F1WWGBcr9+RYfvQbqE90t6kWG0HD0+O/KcNejUhCAiIj7KWPGjtVPlNipk2KC8POmJI4Tcpvv3wh6l3I8J32tQbkYSkswJh+UV6y8Ons3VHqqp3ZGTYLZTytxIpi+00gLw9ISIX4WZCh3RfrjDkrM+YqDA9Pd36uLa21kWdobG474ghFWAEQCSt0d/dp/5tXipetkDgglCgu6yw4IgBuo3FGRMUDh/+JVwgIHIbRgBELjJiUFDUAkHY4/9Hkp4ohKS5AsNU78/7JLy4KD9swkIRcwXkItzgmHMDTnEqArDNFlRhrsBPBus9IuQ5YijoRyXlkcqNuQJQ0uyCQrjuXIGMzJw9VXeBsAkLSWZC2CQEBGBMMK5JzwGoMAKwJXu2YHCSeu93cK+p1VOGf5KLpKsd1fvzCssse8erq87rwmeOUUjKE5qSyKmUsfys9+/CT0B8lPAjd4+IiCQj6axAxo5iY2FB3hEAgG6jsBAQZq+QlIqJhCOM3hBIRORlJF4gCMsv0uc7VEikZEwGJCL14D0IaBiVTwkwAiDvE5wUf6f+OtMFaBwMBYgYARCRqjEUoGFUlSvACICICAwFSIUYARA5zVRbeqg1dssrc7Vy94RcgKEAjeTFEwPcDkBENJpXnaLsnUyG2ya5++BFGAcQEY3AWQFlM9WVHW6N3ayLcO+v9eKJAVkExEep/PbE5F1M9UcP/bVHeDw3783lkWJxbemhs72WSiFLt6xO53KCZ/DaUMB6jK6DeNAeEZEDTPVHD/01aPW/bogCMFD70ZGjtRs3pGvQee7Q2YDVb66Oglh+9m9d6ZYogZTNa0OB2RlZjle+WV0pxe80nH+3rBkAQrPz49vLHszf9WyEqa7s8IPYJfcrzvUAqavEknP3LNcEL3ktP10rfvvPj28vE19KzN+ZoxVr3ju8t12o5kbunBiw5vERkdJ1/u2vPXPzNogLbZr0zKSzpVc705dotU+++abGUksTHR9ytnXABHBewBN4bSjgdobz75Y9WPLatnSt8PgerAd6XK94kL9tl06sdvhcQP7OfDFw/vijczW305+NAICeiqr4V3bt1AjlZd9E7Xo2fzPKDrfGbn451dv/O3EJ31v9ZLgv+72ISEID/feBbv079baFIf0mRGk1ADpP/0ep9aWwWLd3jyaHoYBEOtubkbpK/OKum7cktPnc0IuJsTrxkUkzb9dO28A5+FzrgAlCKkBiZprGXjkRTVrQj35qvi2hS4Qu3bghXTOytPPcO6VNCPvlljfnasXNh3J0jiaDoYA0BvrvIzTeelN0TXR88LkHlmeh/tbv9FohcP7mYNl166uxo6spANMGiWg0jX8Qelq7TOkjDxjobG+yDRFMD3oBzgp4Cm4mdDPD+Xf3Hiy7n71557ZdO7dtXhIsd4eIiJwQ9dQvQ7v/+pfaAeFp5+n/eOejemHDc09rl/DAVFtaWj9WA6RAnBUAgNkZWTdr6mzxAAATuUlEQVSrK6eyiUDjH4SeB4OANSK+Z7deZ3tz6JJXXkmzrcbAmYhc515Tq6T3ItLO3bAFRw8deecsACDsl8IRhNrleanv6A+981excHXAodJ+pg16CIYCEomKTURZTe38CCFtsOw6MMb/vZ7W26Y0jRYw1ZWVXQdCx2tW6x+AHln+O/FoAS80cNuIiPBRa7xEE9Omr34z3fpk7oY3546qEvncm//6nM3zN990R8dICgwFpKLL2ZV//t33Dp4DEJq9JBXn7NWKenZV6t6vDu+tAIDQ7M35AYfLxh3pdVGp+Kpsb3Nq/rblurEqEU1soOGrDzt0r0aEy90RIlIahgIS0uXs2pkjPOz8piI0wA+ANi1/V5ptpYjlO7ctt3m+aycAYHg1m6tG1iciIpIUQwGJdH5zsOx+tngAgOl61XUE5Xv6RCzXCDzWYNPxj68IB8Amr3xtaQQGGr768NJ3wHcf/qdh0cur5vkNq4PE5dsXhUOYOTDpFj24cvGepXBUU0TkdRgKDBnrrGKH0gmjnn1lyccfiTP/gLfM5zMa8ECDTcc/vhK48rU1EcLj986ufG1pyqpX8dWHHbpXX0jSjKiDwWtflB5vWL0mxQ8Amq/0r3xte8TYTTEaIPI2DAVE4xxUPM6xxLZRgib95W3pY1WUn7M3ZbDFg4E9SVf9ld7E5WuEAdsvKSPxyoku49LhKQLD6sBvXlr8xZONXSkLNQAQHx3hRFNE5PkYCkxsrChBojsXuI/uybSJK8nBcLVO7i54lxCtr/WxRvsEOgYHYDt+D5oeAPdOHxgWHT5hGoQGQLDGdmXLblOevvRFRMMxFCBSpZCFlhUBGwOydIWIZMbTBom8Tm+H0TqoD5i+Q4Df8O/xftqAYXWm0BQReQGGAkTeJXLugpB7V+puAwAGm6qbkRwZDkDjp8W9gQGbOqcbxDsGdl1878AXTaMjg7GaclLQj35O/UzqbStV55k/7j1z2/Fy17hTf134cdcvJA/DBYIpmdKmgym0730etHbyPsUS8Uta8zKOf/zeAQC2OwAjIpJx+sR/tiavfG1phFCn9MAlAEDwAmFnwchoYKymnPALXZCzlwQZnL2CxmN7Y8YR0YCkBxKTB1NQKBAYGCh3F5zjnnRCxeb6SUj3ZBozByXll7TmX5JGlYYv/ZfXlo5bR5OyanuKI0251CSih3H8ZLgvYWuezjYsuNek9JsIjx4UPG6Y8BQKCgX6+vrk7gIRkeNM1z/+4FKP8DjlVzuXWeZMDBf2ftEMAKELc2yHLjvlt7/Z9xe88Pqz4jEkg7XHPupfYH2qciMGhcDAQKmGCYYUIygoFCAi8hym6x9/cCnohddf1kEYwj+ue+XlND8YLuz94kHOb19P1wpjPyBMtNgvj4hJwecdt5/VRQCAqetmT+LTjAPI3Zg2SETkvM7aSz0pv7J8ffdLX5DYc+FaJ9DZ0YyU9HThDmO6eTmWW4+OVR4Vk4gGQycAwNTZ0ZOiY84MuR1nBYiInDbY3wf0/GVvg21hcL9pEH0IjbPuuPSLjgs+3y/Wt1cuhAUfdRgWR+kGb7XdS13Ag53J/RgKEBFNSujiV15OG7H3cbDW6Wb8ouOCz3fcflYzwNUBkgkXCEh+hqt1TuwkNJwt3nf2jiv7QzQhP/9A9LR1meyW9w/tyjT13xu3HAC0UTGhDYZarg6QbBgKEBE5Lyp9YWjPpVN14jFNnWf+uPfYdZO49v+Xb4SzEQwXPresIIxVDgDayNmhzecv3EuN4eoAyYILBEREk6BNffm3+PiDj/ZeAACELnxtXaoWgG7xzhew94s/XgcQujAnBeeF+mOVA+IaQU9ADFcHSB4MBcgjGC7u+3MLAIRkLbbdEDzQcOzDSmFjd8qvC5bpAMB07csP2qJfiLv1xUVhDjbhhe2LhL+xpmtffnDROjEbvPjV36RpxiyfRDukLtrUl9+wd1yfbvHONxZbnqSmT1gu4OoAyYahACmf4eK+P/cvfrUgTSM8BpIBiHFA4K8L1umEx8VnLNEAeiuvxK1/Y7sfMFh3/JMvzureWDoLhosfXPR/YftvdIBQfqHuTto45c62QzRJg7fakPMcVwdILswVIMUzdLYgOU382q2buzjEUl5X2ZO8Uhz7NSkLktHQaU0nTFgwT0jt9ouKC0bfgAkwaee+Yfla70i5s+0QTYKp7vO9+z66GfeMeOQAkQw4K0BKJ2zItm7Z8ouKC77QLz4J9R/ayqXxD0bbgAmzACBEO3rCXqvxA2A4W/xFo6UoJHqccmfbIZoEbdqLO73/PiOkcAwFSD2EhIOQrN9uT9GKKQXjljvbDhGRR2IoQEonbMgeBMQJgAGbDdk9bbdN81K01vLANC0w1ly9obMldNH6dfNs24kep3wsztYnIlI25gqQ4umiEtB48oy4IfuidVpel5YV2ltZK5QPNFxpRErUBLl7PW23hUDBdO3Loen9scudbYeIyANxVoCUT7fojV9j35+LGwCEZC1OxgWhXJOy7lUc+7B4HwCbzYRjNrN0ZcqBkx8cqASAkKzf/tr/gz+bBsYuH2t74Fj1mfVFRJ7Jx2w2y90HkVQ3ogbQ2Ng4OyNLqtacdbO6MjQlUZKmehqadU9Kl1JkqjleciNu68Z5Chu0nDt42DM9aO38hS5I7l6o1E+G+8FJ8XL3QnHuNbXOmmvvWARluFN/PTk52bYkMDBQqmEiMDBw4kpqwgUCIiIiVWMoQEREpGrMFVClESsF1qeoOV5yI271nLbSb3sBAMmrf7802lpHLAQQsvSf18xX2DIDERFNCkMBGqH7YtWcV3/3ew0wUHPkw9Ly6N/lRuLW2ZJvA1f/fk00IJSfvdI1PzdS5q4SEZEEuEBAIyVnzhdy5zUxc0Jw32QCTP5pv7NMD9iWExGR5+OsAI0Q5u8/qkyr1QC4VX6gtN5aLc6dnSIiIpdhKECOuHX2/37WiLBFW38/TyvmFsjdJSIikgZDAXLArbbGsGde3SAuHKC/rxfgrAARkXdgroAqaf0D0d3WYTk79y9DWwPG1H3DIFavOT60TEBERB6PswLqFL106zPHS/7rwFkASF79UnJp5bjVc5+f++8nSv79IgCELdr6UmDJZ/390hy1y6MGiYjkxYOHXUK5Zw8rD0MBcjUePGwXDx4mK6lnBar35+05DwDI2a3fkSEUdpcVFhwxjCwlIiIi+UmaK9BdVrgHu/V6vV5fvLFrz/5qAED1/oKK7GJraWFZt5S/k4iIiKZC0lAgLL/I8p0/7Ols3fmqagDVVedz1ueHiRXW5xiMd6X8nUTKFxAf9ZPhvty9ICKyz1Vpg92XKww56zMAZOzQD60IVFed14W/NFQtPT3d+ri2ttZFnSEiIo8zekWfa/wu4oJQQMwM0G0szhj1wp6ujcU7woaKbId/CdMGh+mvPlbcElfwT2n+jpXfOrnvU7ywe6XO2QbJez1o7Zx6I5wYkNG9pla5u6BEd+qvy92F8YwYFJg26DouCAXC8ov0+UD1/rzCsuIicWkA1fvz9nRtHHouP/+MdbuZwUiOGpHMrDQS/pX0IHzXRJJw3RFDGZnWtIDussK8PditV1Ac4CG8fiehpwiIj2psbJS7F0RELiHprED1/rxPwi1f/C1pAd1lhQVHImXfQ9hxct+Zq8LDlLV/WBY9Yp6/48yeYw0AMHPxshlDV/VXHyv+psfyLHTZ6+ueGrEqYHPh2oS2T/sWiCsLD69/tLdCuDI1f9vyMVcbiIiI5CVpKJCxo9hYWJB3BACgE1YDussqDIBhT955Sy05jha4e+FGwqbdf9AAA3/70/ufnowZlgrQcWbPsb5lr7/xlL/wGHhSLC/+JnDtH9ZFA8KFZy4bnhrvwh7xwv6WU1+2zivY9ooOMF3/6L2DpxkNEBGRQkmcKyDmCYxbIouUhRnCrXQ0MQmhZ1r6+zE0Mt+62YAnXxC/7sfMXzaz4QwAoN9//u4/aCy1nLjw1uWa+3HrxbFfm5qZWlHWfnu5LsKVb5CIiGhyVHIPgpn+Y5+WP/Dge8xMsL6uiUkIPdMHAP7+GggbCq5a24lz5EIAQX5+1nragGC0DpgQIcWJ/URERNJSSSgwOUIewMzFBX9I8xdzC+TuEhERkcQYCkATMAN3+0yAuBZg6hPzBG/dbJj57KZ/zLAtj3PkQgD3u2ovNSf4AgDuXmv/DrOMzT1GF78TIiIi5zEUAKJnp+DYF6dmv7EiBug48+lVS9ogcLflVn+GOCXw6VVg5ugLr/ztaZ2QNmi9MPrpFzOuXvifJ36TEQP017WeC/jVuqUZMZPr3c3qSu4nVAJhP6HCTxcgIpoEhgIAYpbtXoc9x/ZdAzBz8bInIWT/Ra98Yd6/fVH8bxcAYObignWBxcf6TYB22IVn9vxx35nhF8I/7R9fx3//cd8eAMC8dW+smGQcQIrCaICIvJKP2WyWuw8iCc/PamxsnJ2RJVVrjrp1ct+lwKEFBel498SA4WpdQHyU3L1wgnAIsdICAnWeQMd3rSo8eNh1XHfaoArcOrlvz5/q+oUn/XWXriIoQPI4gJQmID5KmB7g+YNE5B24QDAF0Ss3LfvT++IKgmsXAgxX61zUshJIcrMfWQjRgNJmCIiInMJQYEo0T/3TG0+54xdNYrBR5yyiOt81EdFUcIGAiIhI1RgKEBERqRpDAaW7WV3JpWgiInIdhgJERESqxlCAiIhI1RgKEBERqRpDASIiIlVjKEBERKRqDAWIiIhUjaEAERGRqjEUICIiUjWGAkRERKrGUICIiEjVGAoQERGpGkMBIiIiVWMoQEREpGoMBYiIiFTt53J3YEhgYKDcXVCoSf/LqPOfVJ3vGmp943zXqqLaN+5qCgoF+vr65O6CQk3uXyYwMFCF/6TqfNdQ6xvnu1YVCd84Q4oRuEBARESkagwFiIiIVI2hABERkaoxFCAiIlI1hgJERESqxlCAiIhI1RgKEBERqZqCzhWQ1s3qyhElszOyZOnJ+Eb3k4iIyJ28MxRITk62fSocTNGoyEF3RFeJiIjczDtDAbs46BIREY3GXAEiIiJVYyhARESkagwFiIiIVI2hABERkaoxFCAiIlI1hgJERESqxlCAiIhI1RgKEBERqRpDASIiIlVjKEBERKRqDAWIiIhUjaEAERGRqjEUICIiUjWGAkRERKrGUICIiEjVGAoQERGpmo/ZbJa7D+QS6enptbW1cveC3IQft3rwsybJcVaAiIhI1RgKEBERqRpDASIiIlVjrgAREZGqcVaAiIhI1RgKEBERqRpDASIiIlVjKEBERKRqDAW8RXdZYd7+6qHn1fvz8vLy8vIKy7qH1RHY1iQP5MjHPfR5DyslD+PQZ22/KpGDGAp4her9eQVHDEPPu8sK92C3Xq/XF2dXFIh/G6r3F1RkF+v1en3xxq49HB08l0MfN6r3FxjX6/V6vX535JF3+XF7Jsc+a8tr79pWJXIcQwGPV70/L29P18bdG3VDZXeNhpzMDAAIezpbd76qGkC3sUuX/XQYAITlr88xGO/K0l2aGkc/blRXnRcLkbFDX5QfJkNnaUoc/qwBAN1l71ZE5uhGtULkAIYCHi9jh16vL8qfaVPUbezShYsFYeGR6DJ2A2HhkYaKy90A0F32yXlrBfIojn7c3cYuXbhx7KlkUj5HP2tACASyd70U7vZOkndgKOCN7hrtTRNm7NCvNxbk5eXlFVRkF/Nrotew/3EDhiPGTL04lcwFAu8wxmctBAL8L02TxlDA81iyhsZO/psZbmeasLusMO+T8GK9Xq/XrzcWMLvIQ0zy4wag2/iSsEBgMyFESjbp/9oMBGiKfi53B8hpGTv0+h3j1ggLjzRU3QXCAHQbuxCZGQZUGw267F3Cn4uMzBx8YuxGBv96KN4kP26ER8Lolg6SZCb3WXeXVRgMhoK8I2KdPXldGznrR87hrIBXmhmuO/9JWTeA7ssVYprRzHCd9athddV5RIbzb4WXsPdxIyMz8shnwndLm4xR8nB2Puuw/CK9qHijDjm7mSRKTuOsgFcKyy/abcwryDsC6DYWF2WMKLMpJS9g7+MGMnbsrsrLywOAnN36HRwcvIL9z5poinhnQiIiIlXjAgEREZGqMRQgIiJSNYYCREREqsZQgIiISNUYChAREakaQwEi5ekoyvLJKuqQuxtEpA4MBYiIiFSNoQAREZGqMRQgUriOoiwf0dZym7KsonI7rwDlW8UyoYLNK0RE9jAUIFKyjqKs2O1Jp8xms9ncfqBphc3IXrX9bfy3+ELmoRXCC+VbfVY0HWg3m81m81stK7ZXydd1IvIUDAWIFKx87/aqLadKcgEAMYVvbcGhE9ZYYMtbhTHCCytfykRTWwdQfuLQUHHuzgOZMvSZiDwNQwEiZctMiLU+jk0Qh/yRL4g62ppsi2NWvsRYgIgmxFCAiIhI1RgKEClb1WcnrQcMtLdUISkuZsy6MXFJqGpph219IqIJMBQgUrDcnQcyq7bvFdIDOorePoQtz+eOV//5LTj0tng4UfnWFYfc0Eci8nQ/l7sDRDSOmMLKdmTF+vgAALacMpeMFwkAuSXmU1t9Yn22A8g8cGALtruhk0Tk2XzMZrPcfSAi1yjf6vN2Qntl4dhLCkREXCAg8iblW32Gbl7QUfT2oXFTC4iIAM4KEHmZjqKsWOvBQhMvKBARMRQgIiJSNy4QEBERqRpDASIiIlVjKEBERKRqDAWIiIhUjaEAERGRqjEUICIiUrX/D5R+b9pDjOEUAAAAAElFTkSuQmCC" /><!-- --></p>
-<p>A warning though: the <code>score_locations</code> function can be quite slow for large data sets. This might change in future versions of the package.</p>
+<p>A warning though: the <code>score_locations</code> function can be
+quite slow for large data sets. This might change in future versions of
+the package.</p>
 </div>
 <div id="finding-the-top-scoring-clusters" class="section level4">
 <h4>Finding the top-scoring clusters</h4>
-<p>Finally, if we want to know not just the most likely cluster, but say the five top-scoring space-time clusters, we can use the function <code>top_clusters</code>. The clusters returned can either be overlapping or non-overlapping in the spatial dimension, according to our liking.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>top5 <span class="ot">&lt;-</span> <span class="fu">top_clusters</span>(poisson_result, zones, <span class="at">k =</span> <span class="dv">5</span>, <span class="at">overlapping =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the counties corresponding to the spatial zones of the 5 clusters.</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>top5_counties <span class="ot">&lt;-</span> top5<span class="sc">$</span>zone <span class="sc">%&gt;%</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(get_zone, <span class="at">zones =</span> zones) <span class="sc">%&gt;%</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(<span class="cf">function</span>(x) counties[x])</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the counties corresponding to the zones as a column</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>top5 <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">counties =</span> top5_counties)</span></code></pre></div>
-<p>The <code>top_clusters</code> function includes Monte Carlo and Gumbel <span class="math inline">\(P\)</span>-values for each cluster. These <span class="math inline">\(P\)</span>-values are conservative, since secondary clusters from the original data are compared to the most likely clusters from the replicate data sets.</p>
+<p>Finally, if we want to know not just the most likely cluster, but say
+the five top-scoring space-time clusters, we can use the function
+<code>top_clusters</code>. The clusters returned can either be
+overlapping or non-overlapping in the spatial dimension, according to
+our liking.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>top5 <span class="ot">&lt;-</span> <span class="fu">top_clusters</span>(poisson_result, zones, <span class="at">k =</span> <span class="dv">5</span>, <span class="at">overlapping =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the counties corresponding to the spatial zones of the 5 clusters.</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>top5_counties <span class="ot">&lt;-</span> top5<span class="sc">$</span>zone <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(get_zone, <span class="at">zones =</span> zones) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(<span class="cf">function</span>(x) counties[x])</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the counties corresponding to the zones as a column</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>top5 <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">counties =</span> top5_counties)</span></code></pre></div>
+<p>The <code>top_clusters</code> function includes Monte Carlo and
+Gumbel <span class="math inline">\(P\)</span>-values for each cluster.
+These <span class="math inline">\(P\)</span>-values are conservative,
+since secondary clusters from the original data are compared to the most
+likely clusters from the replicate data sets.</p>
 </div>
 </div>
 </div>
 <div id="concluding-remarks" class="section level2">
 <h2>Concluding remarks</h2>
-<p>Other univariate scan statistics can be calculated practically in the same way as above, though the distribution parameters need to be adapted for each scan statistic.</p>
+<p>Other univariate scan statistics can be calculated practically in the
+same way as above, though the distribution parameters need to be adapted
+for each scan statistic.</p>
 </div>
 <div id="feedback" class="section level1">
 <h1>Feedback</h1>
-<p>If you think this package lacks some functionality, or that something needs better documentation, I happily accept feedback either here at GitHub or via email at <a href="mailto:benjak@math.su.se" class="email">benjak@math.su.se</a>. I’m also very interested in applying the methods in this package (current and future) to new problems, so if you know of any suitable public datasets, please tell me! A dataset with a multivariate response (e.g. multiple counter variables) would be of particular interest for some of the scan statistics that will appear in future versions of the package.</p>
+<p>If you think this package lacks some functionality, or that something
+needs better documentation, please open an issue here. I’m also very
+interested in applying the methods in this package (current and future)
+to new problems, so if you know of any suitable public datasets, please
+tell me! A dataset with a multivariate response (e.g. multiple counter
+variables) would be of particular interest.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Allevius2017" class="csl-entry">
-Allévius, Benjamin, and Michael Höhle. 2017. <span>“<span class="nocase">An expectation-based space-time scan statistic for ZIP-distributed data</span>.”</span> Stockholm University.
+Allévius, Benjamin, and Michael Höhle. 2017. <span>“<span class="nocase">An expectation-based space-time scan statistic for
+ZIP-distributed data</span>.”</span> Stockholm University.
 </div>
 <div id="ref-rsatscan" class="csl-entry">
-Kleinman, Ken. 2015. <em>Rsatscan: Tools, Classes, and Methods for Interfacing with SaTScan Stand-Alone Software</em>. <a href="https://CRAN.R-project.org/package=rsatscan">https://CRAN.R-project.org/package=rsatscan</a>.
+Kleinman, Ken. 2015. <em>Rsatscan: Tools, Classes, and Methods for
+Interfacing with SaTScan Stand-Alone Software</em>. <a href="https://CRAN.R-project.org/package=rsatscan">https://CRAN.R-project.org/package=rsatscan</a>.
 </div>
 <div id="ref-Kulldorff2001" class="csl-entry">
-Kulldorff, Martin. 2001. <span>“<span class="nocase">Prospective time periodic geographical disease surveillance using a scan statistic</span>.”</span> <em>Journal of the Royal Statistical Society Series a-Statistics in Society</em> 164: 61–72.
+Kulldorff, Martin. 2001. <span>“<span class="nocase">Prospective time
+periodic geographical disease surveillance using a scan
+statistic</span>.”</span> <em>Journal of the Royal Statistical Society
+Series a-Statistics in Society</em> 164: 61–72.
 </div>
 <div id="ref-Kulldorff1998" class="csl-entry">
-Kulldorff, Martin, William F. Athas, Eric J. Feuer, Barry A. Miller, and Charles R. Key. 1998. <span>“Evaluating Cluster Alarms: A Space-Time Scan Statistic and Brain Cancer in Los Alamos.”</span> <em>American Journal of Public Health</em> 88 (9): 1377–80.
+Kulldorff, Martin, William F. Athas, Eric J. Feuer, Barry A. Miller, and
+Charles R. Key. 1998. <span>“Evaluating Cluster Alarms: A Space-Time
+Scan Statistic and Brain Cancer in Los Alamos.”</span> <em>American
+Journal of Public Health</em> 88 (9): 1377–80.
 </div>
 <div id="ref-Kulldorff2005" class="csl-entry">
-Kulldorff, Martin, Richard Heffernan, Jessica Hartman, Renato M. Assunção, and Farzad Mostashari. 2005. <span>“<span class="nocase">A space-time permutation scan statistic for disease outbreak detection</span>”</span> 2 (3): 0216–24.
+Kulldorff, Martin, Richard Heffernan, Jessica Hartman, Renato M.
+Assunção, and Farzad Mostashari. 2005. <span>“<span class="nocase">A
+space-time permutation scan statistic for disease outbreak
+detection</span>”</span> 2 (3): 0216–24.
 </div>
 <div id="ref-Neill2006" class="csl-entry">
-Neill, Daniel B., Andrew W. Moore, and Gregory F. Cooper. 2006. <span>“<span>A Bayesian Spatial Scan Statistic</span>.”</span> <em>Advances in Neural Information Processing Systems</em> 18: 1003.
+Neill, Daniel B., Andrew W. Moore, and Gregory F. Cooper. 2006.
+<span>“<span>A Bayesian Spatial Scan Statistic</span>.”</span>
+<em>Advances in Neural Information Processing Systems</em> 18: 1003.
 </div>
 <div id="ref-Neill2005" class="csl-entry">
-Neill, Daniel B., Andrew W. Moore, Maheshkumar Sabhnani, and Kenny Daniel. 2005. <span>“Detection of Emerging Space-Time Clusters.”</span> In <em>Proceedings of the Eleventh ACM SIGKDD International Conference on Knowledge Discovery in Data Mining</em>, 218–27. ACM.
+Neill, Daniel B., Andrew W. Moore, Maheshkumar Sabhnani, and Kenny
+Daniel. 2005. <span>“Detection of Emerging Space-Time Clusters.”</span>
+In <em>Proceedings of the Eleventh ACM SIGKDD International Conference
+on Knowledge Discovery in Data Mining</em>, 218–27. ACM.
 </div>
 <div id="ref-Tango2011" class="csl-entry">
-Tango, Toshiro, Kunihiko Takahashi, and Kazuaki Kohriyama. 2011. <span>“A Space-Time Scan Statistic for Detecting Emerging Outbreaks.”</span> <em>Biometrics</em> 67 (1): 106–15.
+Tango, Toshiro, Kunihiko Takahashi, and Kazuaki Kohriyama. 2011.
+<span>“A Space-Time Scan Statistic for Detecting Emerging
+Outbreaks.”</span> <em>Biometrics</em> 67 (1): 106–15.
 </div>
 </div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
-<li id="fn1"><p>Expectation-based scan statistics use past non-anomalous data to estimate distribution parameters, and then compares observed cluster counts from the time period of interest to these estimates. In contrast, <em>population-based</em> scan statistics compare counts in a cluster to those outside, only using data from the period of interest, and does so conditional on the observed total count.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>Expectation-based scan statistics use past non-anomalous
+data to estimate distribution parameters, and then compares observed
+cluster counts from the time period of interest to these estimates. In
+contrast, <em>population-based</em> scan statistics compare counts in a
+cluster to those outside, only using data from the period of interest,
+and does so conditional on the observed total count.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 

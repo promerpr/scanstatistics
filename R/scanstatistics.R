@@ -19,7 +19,7 @@ NULL
 NULL
 
 # Hack based on Hadley Wickhams comment:
-# http://stackoverflow.com/a/12429344/897506
+# https://stackoverflow.com/a/12429344/897506
 globalVariables(c(
 ## Variables used unquoted inside functions-------------------------------------
   "location",

@@ -1,3 +1,11 @@
+## Resubmission 
+
+This is a resubmission. In this version I have:
+
+* Fixed non-canonical CRAN URL
+* Updated other URLs to https
+* Updated the date field
+
 ## Release summary
 
 This release updates the maintainer and makes some other changes to remove
@@ -5,7 +13,7 @@ R CMD check warnings.
 
 ## Test environments
 
-* local: Windows 10 x64, R 4.0.5 
+* local: Windows 10 x64, R 4.1.3 
 * r-hub: windows-x86_64-devel, ubuntu-gcc-release, linux-x86_64-rocker-gcc-san, fedora-clang-devel
 * Github Actions: windows-latest-release, macOS-latest-release, ubuntu-latest-release, ubuntu-latest-devel
 
@@ -20,7 +28,8 @@ There was 2 NOTES:
 This package was previously on CRAN, but was removed due to check issues. In order to get this
 package back on to CRAN, I (Paul Romer Present) am taking over maintainer duties from the previous
 maintainer, Benjamin Allévius. The previous maintainer has sent an email to
-cran-submissions@r-project.org confirming this.
+cran-submissions@r-project.org confirming this. You can also view our discussions on GitHub:
+https://github.com/BenjaK/scanstatistics/issues/12
 
 This is my first submission to CRAN. 
 

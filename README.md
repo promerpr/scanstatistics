@@ -18,10 +18,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/promerpr/scanstatistics/workflows/R-CMD-check/badge.svg)](https://github.com/promerpr/scanstatistics/actions)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/scanstatistics)](https://cran.r-project.org/package=scanstatistics)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/scanstatistics)](https://cran.r-project.org/package=scanstatistics)
 [![CRAN
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/scanstatistics)](http://cran.rstudio.com/web/packages/scanstatistics/index.html)
-[![DOI](http://joss.theoj.org/papers/10.21105/joss.00515/status.svg)](https://doi.org/10.21105/joss.00515)
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/scanstatistics)](https://cran.r-project.org/package=scanstatistics)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.00515/status.svg)](https://doi.org/10.21105/joss.00515)
 <!-- badges: end -->
 
 # scanstatistics
@@ -111,7 +111,7 @@ New Mexico, for the years 1973-1991. This data was studied by Kulldorff
 Alamos and Santa Fe during the years 1986-1989, though the excess of
 brain cancer in this cluster was not deemed statistically significant.
 The data originally comes from the package *rsatscan*, which provides an
-interface to the program [SaTScan](http://www.satscan.org), but it has
+interface to the program [SaTScan](https://www.satscan.org), but it has
 been aggregated and extended for the *scanstatistics* package.
 
 To get familiar with the counties of New Mexico, we begin by plotting
