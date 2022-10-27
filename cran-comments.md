@@ -40,6 +40,9 @@ maintainer, Benjamin Allévius. The previous maintainer has sent an email to
 cran-submissions@r-project.org confirming this. You can also view our discussions on GitHub:
 https://github.com/BenjaK/scanstatistics/issues/12
 
+The package was archived due to conflicting macros between PKG_CXXFLAGS and PKG_LIBS. I have
+updated src/Makevars.win to remove this note. 
+
 This is my first submission to CRAN. 
 
 * installed size is  5.6Mb, sub-directories of 1Mb or more: libs   5.1Mb
