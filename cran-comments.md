@@ -1,4 +1,13 @@
-## Resubmission 
+## Resubmission 2
+
+This is a resubmission. In this version I have:
+
+* Removed whitespace in the description text
+* Added a reference in the description text
+* Added a \value field to print.scanstatistic.Rd
+* Removed \dontrun from examples
+
+## Resubmission 1
 
 This is a resubmission. In this version I have:
 
@@ -8,8 +17,8 @@ This is a resubmission. In this version I have:
 
 ## Release summary
 
-This release updates the maintainer and makes some other changes to remove
-R CMD check warnings. 
+This release updates the maintainer and updates the flags in src/Makevars.win to fix the issues 
+that caused the package to be archived. 
 
 ## Test environments
 
