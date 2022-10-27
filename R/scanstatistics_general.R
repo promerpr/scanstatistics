@@ -87,6 +87,7 @@ gumbel_pvalue <- function(observed, replicates, method = "ML", ...) {
 #' @param x A an object of class \code{scanstatistic}.
 #' @param ... Further arguments passed to or from other methods.
 #' @export
+#' @return x, invisibly
 #' @keywords internal
 print.scanstatistic <- function(x, ...) {
   if (x$type == "Bayesian") {
@@ -147,14 +148,13 @@ print.scanstatistic <- function(x, ...) {
 #' @importFrom tibble tibble
 #' @export
 #' @examples
-#' \dontrun{
 #' # Simple example
 #' set.seed(1)
 #' table <- data.frame(zone = 1:5, duration = 1, score = 5:1)
 #' zones <- list(1:2, 1:3, 2:5, 4:5, c(1, 5))
-#' x <- list(table = table, n_locations = 5, max_duration = 1, n_zones = 5)
+#' x <- list(observed = table, n_locations = 5, max_duration = 1, n_zones = 5)
 #' score_locations(x, zones)
-#' }
+
 score_locations <- function(x, zones) {
   res <- tibble(location = seq_len(x$n_locations),
                 score = 0,
@@ -198,13 +198,11 @@ score_locations <- function(x, zones) {
 #'    and \code{critical_value}. 
 #' @export
 #' @examples 
-#' \dontrun{
 #' set.seed(1)
 #' counts <- matrix(rpois(15, 3), 3, 5)
 #' zones <- list(1:2, 1:3, 2:5, c(1, 3), 4:5, c(1, 5))
 #' scanres <- scan_permutation(counts, zones, n_mcsim = 5)
 #' top_clusters(scanres, zones, k = 4, overlapping = FALSE)
-#' }
 top_clusters <- function(x, zones, k = 5, overlapping = FALSE, gumbel = FALSE,
                          alpha = NULL, ...) {
   k <- min(k, nrow(x$observed))

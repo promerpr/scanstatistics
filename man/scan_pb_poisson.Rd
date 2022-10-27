@@ -77,7 +77,6 @@ Calculate the population-based Poisson scan statistic devised by Kulldorff
 (1997, 2001).
 }
 \examples{
-\dontrun{
 set.seed(1)
 # Create location coordinates, calculate nearest neighbors, and create zones
 n_locs <- 50
@@ -104,7 +103,6 @@ res <- scan_pb_poisson(counts = counts,
                        population = population,
                        n_mcsim = 99,
                        max_only = FALSE)
-}
 }
 \references{
 Kulldorff, M. (1997). \emph{A spatial scan statistic}. Communications in 

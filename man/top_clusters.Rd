@@ -44,11 +44,9 @@ return the spatially non-overlapping clusters, i.e. those that do not have
 any locations in common.
 }
 \examples{
-\dontrun{
 set.seed(1)
 counts <- matrix(rpois(15, 3), 3, 5)
 zones <- list(1:2, 1:3, 2:5, c(1, 3), 4:5, c(1, 5))
 scanres <- scan_permutation(counts, zones, n_mcsim = 5)
 top_clusters(scanres, zones, k = 4, overlapping = FALSE)
-}
 }

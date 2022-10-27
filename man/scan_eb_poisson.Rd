@@ -85,7 +85,6 @@ Calculate the expectation-based Poisson scan statistic devised by Neill et
 al. (2005).
 }
 \examples{
-\dontrun{
 set.seed(1)
 # Create location coordinates, calculate nearest neighbors, and create zones
 n_locs <- 50
@@ -111,7 +110,6 @@ res <- scan_eb_poisson(counts = counts,
                        baselines = baselines,
                        n_mcsim = 99,
                        max_only = FALSE)
-}
 }
 \references{
 Neill, D. B., Moore, A. W., Sabhnani, M. and Daniel, K. (2005). 

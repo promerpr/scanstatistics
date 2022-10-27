@@ -88,7 +88,6 @@ Calculate the expectation-based negative binomial scan statistic devised by
 Tango et al. (2011).
 }
 \examples{
-\dontrun{
 set.seed(1)
 # Create location coordinates, calculate nearest neighbors, and create zones
 n_locs <- 50
@@ -120,7 +119,6 @@ res <- scan_eb_negbin(counts = counts,
                       type = "hotspot",
                       n_mcsim = 99,
                       max_only = FALSE)
-}
 }
 \references{
 Tango, T., Takahashi, K. & Kohriyama, K. (2011), A space-time scan

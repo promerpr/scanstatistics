@@ -69,7 +69,6 @@
 #' @importFrom magrittr %<>%
 #' @export
 #' @examples
-#' \dontrun{
 #' set.seed(1)
 #' # Create location coordinates, calculate nearest neighbors, and create zones
 #' n_locs <- 50
@@ -95,7 +94,6 @@
 #'                        baselines = baselines,
 #'                        n_mcsim = 99,
 #'                        max_only = FALSE)
-#' }
 scan_eb_poisson <- function(counts,
                             zones,
                             baselines = NULL,

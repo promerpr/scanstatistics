@@ -11,6 +11,9 @@
 
 \item{...}{Further arguments passed to or from other methods.}
 }
+\value{
+x, invisibly
+}
 \description{
 Prints a scanstatistic object and returns it invisibly.
 }

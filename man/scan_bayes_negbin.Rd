@@ -124,7 +124,6 @@ negative binomial marginal distribution for the counts under the null
 hypothesis. Under the alternative hypothesis, the
 }
 \examples{
-\dontrun{
 set.seed(1)
 # Create location coordinates, calculate nearest neighbors, and create zones
 n_locs <- 50
@@ -148,7 +147,6 @@ counts[ob_rows, ob_cols] <- matrix(
 res <- scan_bayes_negbin(counts = counts,
                          zones = zones,
                          baselines = baselines)
-}
 }
 \references{
 Neill, D. B., Moore, A. W., Cooper, G. F. (2006). 

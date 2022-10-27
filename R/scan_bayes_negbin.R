@@ -99,7 +99,6 @@
 #' @importFrom magrittr %<>%
 #' @export
 #' @examples
-#' \dontrun{
 #' set.seed(1)
 #' # Create location coordinates, calculate nearest neighbors, and create zones
 #' n_locs <- 50
@@ -123,7 +122,6 @@
 #' res <- scan_bayes_negbin(counts = counts,
 #'                          zones = zones,
 #'                          baselines = baselines)
-#' }
 scan_bayes_negbin <- function(counts,
                               zones,
                               baselines = NULL,

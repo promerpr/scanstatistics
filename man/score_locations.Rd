@@ -30,12 +30,10 @@ space-time window that the location is included in, i.e. average the
 statistic over both zones and the maximum duration.
 }
 \examples{
-\dontrun{
 # Simple example
 set.seed(1)
 table <- data.frame(zone = 1:5, duration = 1, score = 5:1)
 zones <- list(1:2, 1:3, 2:5, 4:5, c(1, 5))
-x <- list(table = table, n_locations = 5, max_duration = 1, n_zones = 5)
+x <- list(observed = table, n_locations = 5, max_duration = 1, n_zones = 5)
 score_locations(x, zones)
-}
 }

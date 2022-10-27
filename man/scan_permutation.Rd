@@ -77,7 +77,6 @@ Calculate the space-time permutation scan statistic devised by Kulldorff
 (2005).
 }
 \examples{
-\dontrun{
 set.seed(1)
 # Create location coordinates, calculate nearest neighbors, and create zones
 n_locs <- 50
@@ -104,7 +103,6 @@ res <- scan_permutation(counts = counts,
                            population = population,
                            n_mcsim = 99,
                            max_only = FALSE)
-}
 }
 \references{
 Kulldorff, M., Heffernan, R., Hartman, J., Assunção, R. M., Mostashari, F.

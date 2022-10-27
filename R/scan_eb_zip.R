@@ -110,35 +110,36 @@
 #' @importFrom magrittr %<>%
 #' @export
 #' @examples
-#' \dontrun{
-#' set.seed(1)
-#' # Create location coordinates, calculate nearest neighbors, and create zones
-#' n_locs <- 50
-#' max_duration <- 5
-#' n_total <- n_locs * max_duration
-#' geo <- matrix(rnorm(n_locs * 2), n_locs, 2)
-#' knn_mat <- coords_to_knn(geo, 15)
-#' zones <- knn_zones(knn_mat)
-#'
-#' # Simulate data
-#' baselines <- matrix(rexp(n_total, 1/5), max_duration, n_locs)
-#' probs <- matrix(runif(n_total) / 4, max_duration, n_locs)
-#' counts <- gamlss.dist::rZIP(n_total, baselines, probs)
-#'
-#' # Inject outbreak/event/anomaly
-#' ob_dur <- 3
-#' ob_cols <- zones[[10]]
-#' ob_rows <- max_duration + 1 - seq_len(ob_dur)
-#' counts[ob_rows, ob_cols] <- gamlss.dist::rZIP(
-#'   ob_dur * length(ob_cols), 2 * baselines[ob_rows, ob_cols], 
-#'   probs[ob_rows, ob_cols])
-#' res <- scan_eb_zip(counts = counts,
-#'                    zones = zones,
-#'                    baselines = baselines,
-#'                    probs = probs,
-#'                    n_mcsim = 99,
-#'                    max_only = FALSE,
-#'                    rel_tol = 1e-3)
+#' if (require("gamlss.dist")) {
+#'   set.seed(1)
+#'   # Create location coordinates, calculate nearest neighbors, and create zones
+#'   n_locs <- 50
+#'   max_duration <- 5
+#'   n_total <- n_locs * max_duration
+#'   geo <- matrix(rnorm(n_locs * 2), n_locs, 2)
+#'   knn_mat <- coords_to_knn(geo, 15)
+#'   zones <- knn_zones(knn_mat)
+#'   
+#'   # Simulate data
+#'   baselines <- matrix(rexp(n_total, 1/5), max_duration, n_locs)
+#'   probs <- matrix(runif(n_total) / 4, max_duration, n_locs)
+#'   counts <- matrix(gamlss.dist::rZIP(n_total, baselines, probs), 
+#'                    max_duration, n_locs)
+#'   
+#'   # Inject outbreak/event/anomaly
+#'   ob_dur <- 3
+#'   ob_cols <- zones[[10]]
+#'   ob_rows <- max_duration + 1 - seq_len(ob_dur)
+#'   counts[ob_rows, ob_cols] <- gamlss.dist::rZIP(
+#'     ob_dur * length(ob_cols), 2 * baselines[ob_rows, ob_cols],
+#'     probs[ob_rows, ob_cols])
+#'   res <- scan_eb_zip(counts = counts,
+#'                      zones = zones,
+#'                      baselines = baselines,
+#'                      probs = probs,
+#'                      n_mcsim = 9,
+#'                      max_only = FALSE,
+#'                      rel_tol = 1e-3)
 #' }
 scan_eb_zip <- function(counts,
                         zones,

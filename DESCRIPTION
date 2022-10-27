@@ -2,9 +2,9 @@ Package: scanstatistics
 Type: Package
 Title: Space-Time Anomaly Detection using Scan Statistics
 Description: Detection of anomalous space-time clusters using the scan 
-    statistics methodology. Focuses on prospective surveillance of data streams, 
-    scanning for clusters with ongoing anomalies. Hypothesis testing is made 
-    possible by Monte Carlo simulation.
+  statistics methodology. Focuses on prospective surveillance of data streams, 
+  scanning for clusters with ongoing anomalies. Hypothesis testing is made 
+  possible by Monte Carlo simulation. Allévius (2018) <doi:10.21105/joss.00515>.
 Version: 1.1.0
 Date: 2022-10-24
 Authors@R: c(
@@ -16,28 +16,9 @@ License: GPL (>= 3)
 URL: https://github.com/promerpr/scanstatistics
 BugReports: https://github.com/promerpr/scanstatistics/issues
 Depends: R (>= 3.4)
-Imports:
-    dplyr,
-    ismev,
-    magrittr,
-    plyr,
-    Rcpp,
-    stats,
-    sets,
-    tibble,
-    tidyr
-Suggests:
-    purrr,
-    doParallel,
-    foreach,
-    ggplot2,
-    knitr,
-    MASS,
-    pscl,
-    reshape2,
-    rmarkdown,
-    sp,
-    testthat
+Imports: dplyr, ismev, magrittr, plyr, Rcpp, stats, sets, tibble, tidyr
+Suggests: purrr, doParallel, foreach, ggplot2, knitr, MASS, pscl, reshape2,
+  rmarkdown, sp, testthat, gamlss.dist
 VignetteBuilder: knitr
 RoxygenNote: 7.2.1
 ByteCompile: true
