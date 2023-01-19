@@ -117,7 +117,7 @@ inline void EBZIPscan::calculate(const arma::uword storage_index,
     n_iterations += 1;
 
     // Expectation-step
-    for (const int& i : zero_idx) {
+    for (const unsigned int& i : zero_idx) {
       d_hat[i] = zip_zeroindic(mu[i], p[i], q_hat);
     }
     // Maximization-step
