@@ -5,8 +5,8 @@ Description: Detection of anomalous space-time clusters using the scan
   statistics methodology. Focuses on prospective surveillance of data streams, 
   scanning for clusters with ongoing anomalies. Hypothesis testing is made 
   possible by Monte Carlo simulation. Allévius (2018) <doi:10.21105/joss.00515>.
-Version: 1.1.0
-Date: 2022-10-24
+Version: 1.1.1
+Date: 2023-01-20
 Authors@R: c(
   person("Benjamin", "Allévius", email = "benjak@math.su.se", role = "aut"),
   person("Paul", "Romer Present", email = "paul.romerpresent@fastmail.fm", role = c("ctb", "cre"))
