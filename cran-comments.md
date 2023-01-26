@@ -3,7 +3,7 @@
 This release fixes two warnings in the most recent CRAN package checks:
 
 * Update EBZIPscan.h to remove a warning when using r-devel on Linux systems. 
-* Remove test-pgumbel to remove a warning when using windows-oldrelease. 
+* Remove test-pgumbel.R to remove a warning when using windows-oldrelease. 
 
 ## Test environments
 
